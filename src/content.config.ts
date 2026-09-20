@@ -13,6 +13,11 @@ const articles = defineCollection({
     readingMinutes: z.number().int().positive(),
     featured: z.boolean().default(false),
     accent: z.enum(["mint", "violet", "pink", "ink"]).default("mint"),
+    image: z.string().optional(),
+    imageAlt: z.string().default(""),
+    imageBlur: z.number().min(0).max(32).default(10),
+    imageBrightness: z.number().min(0.2).max(1.2).default(0.62),
+    imagePosition: z.string().default("center"),
     draft: z.boolean().default(false),
     order: z.number().default(100)
   })

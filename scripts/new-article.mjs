@@ -27,6 +27,11 @@ updatedAt: ${today}
 readingMinutes: 5
 featured: false
 accent: mint
+# image: "images/your-image.jpg"
+imageAlt: ""
+imageBlur: 10
+imageBrightness: 0.62
+imagePosition: "center"
 draft: true
 order: 100
 ---

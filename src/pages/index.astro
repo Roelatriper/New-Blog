@@ -13,7 +13,12 @@ const mainGuide = {
     category: "配置指南",
     readingMinutes: 12,
     accent: "ink" as const,
-    featured: true
+    featured: true,
+    image: undefined,
+    imageAlt: "",
+    imageBlur: 10,
+    imageBrightness: 0.62,
+    imagePosition: "center"
   }
 };
 const cards = [mainGuide, ...entries];
@@ -23,22 +28,22 @@ const cards = [mainGuide, ...entries];
   <main class="home-main shell">
     <section class="home-hero" id="about">
       <div class="hero-copy">
-        <div class="eyebrow">白衣 · 科创委员</div>
+        <div class="eyebrow">才子佳人，自是白衣卿相。</div>
         <h1>把复杂的事，<br /><span>讲清楚。</span></h1>
-        <p class="lede">这里收录我整理的科创情报、工具配置和班级协作资料。无需先回答问题，直接挑一篇感兴趣的文章读就好。</p>
+        <p class="lede">这里收录我整理的科创情报、工具配置和杂。挑感兴趣的读。</p>
       </div>
       <aside class="promise-card">
         <div class="eyebrow">本站正在生长</div>
-        <strong>三份承诺，<br />一篇篇兑现。</strong>
-        <p>先完成 C++ 环境配置指南，随后更新科创情报和协作文档。</p>
+        <strong>Divide<br />et impera.</strong>
+        <p>分而治之。</p>
       </aside>
     </section>
 
     <section id="articles">
       <div class="section-heading">
-        <div><div class="eyebrow">文章</div><h2>从这里开始读。</h2></div>
+        <div><div class="eyebrow">文章</div><h2>从这儿开始读。</h2></div>
         <div class="filters" aria-label="文章筛选">
-          {(["全部", "配置指南", "基础原理", "科创情报", "协作文档"] as const).map((filter, index) => (
+          {(["全部", "配置指南", "基础原理", "科创情报", "个人杂项"] as const).map((filter, index) => (
             <button class="filter-button" type="button" data-filter={filter} aria-pressed={index === 0 ? "true" : "false"}>{filter}</button>
           ))}
         </div>
@@ -53,6 +58,11 @@ const cards = [mainGuide, ...entries];
             readingMinutes={entry.data.readingMinutes}
             accent={entry.data.accent}
             featured={entry.data.featured}
+            image={entry.data.image}
+            imageAlt={entry.data.imageAlt}
+            imageBlur={entry.data.imageBlur}
+            imageBrightness={entry.data.imageBrightness}
+            imagePosition={entry.data.imagePosition}
           />
         ))}
       </div>

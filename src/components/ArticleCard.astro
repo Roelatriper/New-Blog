@@ -7,15 +7,41 @@ interface Props {
   readingMinutes: number;
   accent?: "mint" | "violet" | "pink" | "ink";
   featured?: boolean;
+  image?: string;
+  imageAlt?: string;
+  imageBlur?: number;
+  imageBrightness?: number;
+  imagePosition?: string;
 }
 
-const { id, title, description, category, readingMinutes, accent = "mint", featured = false } = Astro.props;
+const {
+  id,
+  title,
+  description,
+  category,
+  readingMinutes,
+  accent = "mint",
+  featured = false,
+  image,
+  imageAlt = "",
+  imageBlur = 10,
+  imageBrightness = 0.62,
+  imagePosition = "center"
+} = Astro.props;
 const href = `${import.meta.env.BASE_URL}articles/${id}/`;
+const imageUrl = image
+  ? (/^(https?:|data:)/.test(image) ? image : `${import.meta.env.BASE_URL}${image.replace(/^\/+/, "")}`)
+  : undefined;
+const imageStyle = `--card-blur:${imageBlur}px;--card-brightness:${imageBrightness};--card-position:${imagePosition};`;
 ---
 
 <article class:list={["article-card", { featured }]} data-category={category}>
   <a href={href}>
-    <div class:list={["card-art", `accent-${accent}`]}><strong>{title}</strong></div>
+    <div class:list={["card-art", `accent-${accent}`, { "has-image": imageUrl }]} style={imageUrl ? imageStyle : undefined}>
+      {imageUrl && <img class="card-image" src={imageUrl} alt={imageAlt} loading="lazy" decoding="async" />}
+      {imageUrl && <span class="card-image-mask" aria-hidden="true"></span>}
+      <strong>{title}</strong>
+    </div>
     <div class="card-body">
       <div class="card-meta"><span>{featured ? "置顶 · " : ""}{category}</span></div>
       <h3>{title}</h3>

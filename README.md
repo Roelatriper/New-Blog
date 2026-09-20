@@ -64,6 +64,11 @@ updatedAt: 2026-09-20
 readingMinutes: 5
 featured: false
 accent: mint
+image: "images/weekly-tech-news.jpg"
+imageAlt: "实验室桌面上的电脑与开发板"
+imageBlur: 10
+imageBrightness: 0.62
+imagePosition: "center"
 draft: true
 order: 100
 ---
@@ -71,12 +76,42 @@ order: 100
 
 - `category` 只能使用：`配置指南`、`基础原理`、`科创情报`、`协作文档`。
 - `accent` 只能使用：`mint`、`violet`、`pink`、`ink`。
+- `image` 是首页卡片图片，图片应放在 `public/images`，这里填写 `images/文件名`。
+- `imageBlur` 是高斯模糊半径，范围为 `0` 到 `32`，单位为像素。
+- `imageBrightness` 控制图片亮度，范围为 `0.2` 到 `1.2`，推荐从 `0.45` 到 `0.75` 调整。
+- `imagePosition` 控制图片焦点，可写 `center`、`left center` 或 `50% 30%`。
 - `featured: true` 会放大卡片头图区域，适合置顶文章。
 - `draft: true` 不会生成页面，也不会出现在首页。写完改为 `false`。
 - `order` 数字越小，首页位置越靠前。
 - 文件名就是网址。`weekly-tech-news.md` 对应 `/articles/weekly-tech-news/`。
 
 正文使用 Markdown。二级标题 `##` 和三级标题 `###` 会自动出现在文章目录里。
+
+## 为首页卡片添加图片
+
+1. 在项目的 `public` 目录中新建 `images` 文件夹。
+2. 把图片放进去，例如 `public/images/cpp-cover.webp`。
+3. 在对应文章的 frontmatter 中加入：
+
+```yaml
+image: "images/cpp-cover.webp"
+imageAlt: "显示 C++ 代码的电脑屏幕"
+imageBlur: 10
+imageBrightness: 0.58
+imagePosition: "50% 40%"
+```
+
+图片会铺满卡片顶部，并应用可调节的高斯模糊、亮度和渐变蒙版。标题继续显示在蒙版上方。
+
+如果删除 `image` 这一行，卡片会自动恢复为原来的 Material You 纯色样例，不需要修改组件代码。
+
+建议使用横向 WebP、AVIF 或 JPG 图片，宽度约 1200–1600 像素，单张尽量控制在 500 KB 以内。`imageAlt` 应简短说明图片内容；纯装饰图片可以保留空字符串。
+
+需要统一修改所有卡片的默认值时，可编辑：
+
+- `src/content.config.ts`：frontmatter 的默认模糊和亮度。
+- `src/components/ArticleCard.astro`：组件的备用默认值。
+- `src/styles/global.css` 中的 `.card-image-mask`：蒙版颜色与渐变强度。
 
 ## 修改推荐逻辑
 
