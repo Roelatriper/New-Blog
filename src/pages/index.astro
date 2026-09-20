@@ -1,0 +1,70 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ArticleCard from "../components/ArticleCard.astro";
+
+const entries = (await getCollection("articles", ({ data }) => !data.draft))
+  .sort((a, b) => a.data.order - b.data.order);
+const mainGuide = {
+  id: "cpp-environment",
+  data: {
+    title: "Windows 下的 C++ 环境怎么选？",
+    description: "先判断比赛兼容、折腾意愿和项目规模，再进入对应的安装路线。",
+    category: "配置指南",
+    readingMinutes: 12,
+    accent: "ink" as const,
+    featured: true
+  }
+};
+const cards = [mainGuide, ...entries];
+---
+
+<BaseLayout>
+  <main class="home-main shell">
+    <section class="home-hero" id="about">
+      <div class="hero-copy">
+        <div class="eyebrow">白衣 · 科创委员</div>
+        <h1>把复杂的事，<br /><span>讲清楚。</span></h1>
+        <p class="lede">这里收录我整理的科创情报、工具配置和班级协作资料。无需先回答问题，直接挑一篇感兴趣的文章读就好。</p>
+      </div>
+      <aside class="promise-card">
+        <div class="eyebrow">本站正在生长</div>
+        <strong>三份承诺，<br />一篇篇兑现。</strong>
+        <p>先完成 C++ 环境配置指南，随后更新科创情报和协作文档。</p>
+      </aside>
+    </section>
+
+    <section id="articles">
+      <div class="section-heading">
+        <div><div class="eyebrow">文章</div><h2>从这里开始读。</h2></div>
+        <div class="filters" aria-label="文章筛选">
+          {(["全部", "配置指南", "基础原理", "科创情报", "协作文档"] as const).map((filter, index) => (
+            <button class="filter-button" type="button" data-filter={filter} aria-pressed={index === 0 ? "true" : "false"}>{filter}</button>
+          ))}
+        </div>
+      </div>
+      <div class="article-grid" id="articleGrid">
+        {cards.map((entry) => (
+          <ArticleCard
+            id={entry.id}
+            title={entry.data.title}
+            description={entry.data.description}
+            category={entry.data.category}
+            readingMinutes={entry.data.readingMinutes}
+            accent={entry.data.accent}
+            featured={entry.data.featured}
+          />
+        ))}
+      </div>
+    </section>
+  </main>
+  <script is:inline>
+    document.querySelectorAll("[data-filter]").forEach((button) => button.addEventListener("click", () => {
+      const filter = button.dataset.filter;
+      document.querySelectorAll("[data-filter]").forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+      document.querySelectorAll(".article-card").forEach((card) => {
+        card.hidden = filter !== "全部" && card.dataset.category !== filter;
+      });
+    }));
+  </script>
+</BaseLayout>

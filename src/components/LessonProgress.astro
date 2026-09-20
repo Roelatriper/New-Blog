@@ -1,0 +1,41 @@
+<div class="lesson-progress" aria-label="教程进度">
+  <div class="lesson-track">
+    <div class="lesson-fill" id="lessonFill"></div>
+    <span class="lesson-pointer" id="lessonPointer">▼</span>
+    <button class="lesson-step current" type="button" data-section="choose"><span class="lesson-dot"></span>选择路线</button>
+    <button class="lesson-step" type="button" data-section="install"><span class="lesson-dot"></span>安装配置</button>
+    <button class="lesson-step" type="button" data-section="verify"><span class="lesson-dot"></span>A+B 验收</button>
+    <button class="lesson-step" type="button" data-section="principles"><span class="lesson-dot"></span>理解原理</button>
+    <button class="lesson-step" type="button" data-section="finish"><span class="lesson-dot"></span>完成</button>
+  </div>
+</div>
+
+<script is:inline>
+  (() => {
+    const steps = [...document.querySelectorAll(".lesson-step")];
+    const fill = document.querySelector("#lessonFill");
+    const pointer = document.querySelector("#lessonPointer");
+    let completed = false;
+    const setProgress = (index) => {
+      steps.forEach((step, itemIndex) => {
+        step.classList.toggle("done", itemIndex < index);
+        step.classList.toggle("current", itemIndex === index);
+      });
+      if (fill) fill.style.width = `${index * 20}%`;
+      if (pointer) pointer.style.left = `calc(${10 + index * 20}% - .4rem)`;
+    };
+    steps.forEach((step, index) => step.addEventListener("click", () => {
+      document.querySelector(`#${step.dataset.section}`)?.scrollIntoView({ behavior: "smooth" });
+      if (index < 4) setProgress(index);
+    }));
+    const observer = new IntersectionObserver((entries) => {
+      if (completed) return;
+      const visible = entries.filter((entry) => entry.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (visible) setProgress(Number(visible.target.dataset.progress));
+    }, { rootMargin: "-18% 0px -58%", threshold: [0, .2, .5] });
+    document.querySelectorAll("[data-progress]").forEach((section) => observer.observe(section));
+    window.addEventListener("baiyi:route", () => setProgress(1));
+    window.addEventListener("baiyi:verified", () => setProgress(3));
+    window.addEventListener("baiyi:finished", () => { completed = true; setProgress(4); });
+  })();
+</script>

@@ -1,0 +1,49 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+
+interface Heading { depth: number; slug: string; text: string; }
+interface Props {
+  title: string;
+  description: string;
+  category: string;
+  publishedAt: Date;
+  updatedAt?: Date;
+  readingMinutes: number;
+  headings?: Heading[];
+}
+
+const { title, description, category, publishedAt, updatedAt, readingMinutes, headings = [] } = Astro.props;
+const toc = headings.filter((heading) => heading.depth === 2);
+const formatDate = (date: Date) => new Intl.DateTimeFormat("zh-CN", { dateStyle: "long" }).format(date);
+---
+
+<BaseLayout title={`${title} · 白衣`} description={description}>
+  <div class="reading-progress" id="readingProgress" aria-hidden="true"></div>
+  <header class="article-header">
+    <div class="eyebrow">{category}</div>
+    <h1>{title}</h1>
+    <p class="lede">{description}</p>
+    <div class="article-meta">
+      <span>发布于 {formatDate(publishedAt)}</span>
+      {updatedAt && <span>更新于 {formatDate(updatedAt)}</span>}
+      <span>约 {readingMinutes} 分钟</span>
+    </div>
+  </header>
+  <div class="article-shell">
+    <nav class="toc" aria-label="文章目录">
+      <span class="toc-title">本文目录</span>
+      {toc.map((heading) => <a href={`#${heading.slug}`} class={heading.depth === 3 ? "toc-sub" : undefined}>{heading.text}</a>)}
+    </nav>
+    <article class="article-content"><slot /></article>
+  </div>
+  <script is:inline>
+    const progress = document.querySelector("#readingProgress");
+    const updateReadingProgress = () => {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      const ratio = max > 0 ? Math.min(1, scrollY / max) : 0;
+      if (progress) progress.style.width = `${ratio * 100}%`;
+    };
+    addEventListener("scroll", updateReadingProgress, { passive: true });
+    updateReadingProgress();
+  </script>
+</BaseLayout>

@@ -1,0 +1,122 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import EnvironmentChooser from "../../../components/EnvironmentChooser.astro";
+import LessonProgress from "../../../components/LessonProgress.astro";
+
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title="Windows C++ 环境配置指南 · 白衣" description="从比赛兼容到现代工具链，选择并配置适合自己的 Windows C++ 开发环境。">
+  <header class="article-header">
+    <div class="eyebrow">配置指南 · Windows</div>
+    <h1>让第一行 C++，顺利跑起来。</h1>
+    <p class="lede">比赛规则优先；没有指定环境时，再根据折腾意愿、项目规模和磁盘占用选择。</p>
+    <div class="article-meta"><span>适合第一次配置环境的读者</span><span>约 12 分钟完成选择与验收</span></div>
+  </header>
+
+  <div class="article-shell">
+    <nav class="toc" aria-label="文章目录">
+      <span class="toc-title">本文目录</span>
+      <button type="button" data-jump="choose">01 选择路线</button>
+      <button type="button" data-jump="install">02 安装配置</button>
+      <button type="button" data-jump="verify">03 A+B 验收</button>
+      <button type="button" data-jump="principles">04 理解原理</button>
+    </nav>
+    <article class="article-content">
+      <section class="article-panel" id="choose" data-progress="0">
+        <div class="eyebrow">01 · 选择路线</div>
+        <h2>先问三个问题。</h2>
+        <p>你是否必须使用指定环境？你愿意配置编译器吗？你是否需要完整的大型项目能力？回答后，我会给出一条推荐路线。</p>
+        <EnvironmentChooser />
+        <div class="route-summary" id="routeSummary">还没有选择。你也可以直接查看下面四条路线。</div>
+      </section>
+
+      <section class="article-panel" id="install" data-progress="1">
+        <div class="eyebrow">02 · 安装配置</div>
+        <h2>进入对应教程。</h2>
+        <p id="routeAdvice">每条路线都从可信下载来源开始，并用同一份 A+B 代码验收。这样遇到问题时，可以快速判断是编辑器、编译器还是程序本身出了问题。</p>
+        <div class="route-grid">
+          <a class="route-card" href={`${base}articles/redpanda-cpp/`}><strong>🐼 小熊猫 C++</strong><span>轻量、开箱即用，适合日常算法练习。</span></a>
+          <a class="route-card" href={`${base}articles/vscode-msys2/`}><strong>⌘ VS Code + MSYS2</strong><span>愿意理解工具链时，灵活且可持续。</span></a>
+          <a class="route-card" href={`${base}articles/visual-studio-2026/`}><strong>∞ Visual Studio 2026</strong><span>完整 Windows C++ IDE，适合大型项目。</span></a>
+          <a class="route-card" href={`${base}articles/devcpp-competition/`}><strong>🏁 Dev-C++ 5.11</strong><span>赛事明确指定时使用，不作为日常首选。</span></a>
+        </div>
+      </section>
+
+      <section class="article-panel" id="verify" data-progress="2">
+        <div class="eyebrow">03 · A+B 验收</div>
+        <h2>用洛谷 P1001 验收。</h2>
+        <p>输入两个整数，输出它们的和。这一步同时验证保存、编译、运行、标准输入和标准输出。</p>
+        <pre class="code-block"><code>#include &lt;iostream&gt;
+
+int main() &#123;
+    int a, b;
+    std::cin &gt;&gt; a &gt;&gt; b;
+    std::cout &lt;&lt; a + b &lt;&lt; '\n';
+    return 0;
+&#125;</code></pre>
+        <p><strong>本地测试：</strong>输入 <code>1 2</code>，应当输出 <code>3</code>。随后把代码提交到 <a href="https://www.luogu.com.cn/problem/P1001" target="_blank" rel="noreferrer">洛谷 P1001</a>。</p>
+        <button class="primary-button" id="verifyButton" type="button">我已经成功运行 A+B</button>
+        <div class="success-message" id="verifyMessage" hidden>Accepted！基本环境已经配置成功。下一步，看看编辑器与编译器分别做了什么。</div>
+      </section>
+
+      <section class="article-panel" id="principles" data-progress="3">
+        <div class="eyebrow">04 · 理解原理</div>
+        <h2>别把编辑器当成编译器。</h2>
+        <p>你写下的是源代码；编辑器让你更舒服地写；编译器把代码翻译为机器能够执行的程序；调试器帮助你观察程序运行过程。</p>
+        <div class="concept-flow"><div><b>源代码</b><span>.cpp 文件</span></div><div><b>编译器</b><span>g++ / MSVC</span></div><div><b>可执行程序</b><span>.exe 文件</span></div></div>
+        <p><a href={`${base}articles/toolchain-basics/`}>继续阅读：编辑器、编译器和代码是什么关系 →</a></p>
+      </section>
+
+      <section class="article-panel" id="finish">
+        <div class="eyebrow">完成</div>
+        <h2>你已经有了一条可复现的路线。</h2>
+        <p>保存你选择的教程链接。换电脑或帮助同学配置时，仍然从“选路线 → 装工具 → 跑 A+B → 看懂工具链”开始。</p>
+        <button class="primary-button" id="finishButton" type="button">完成本篇教程</button>
+        <div class="success-message" id="finishMessage" hidden>教程完成。现在你不仅能运行代码，也知道是谁让它跑起来的。</div>
+      </section>
+    </article>
+  </div>
+  <LessonProgress />
+  <div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div>
+
+  <script is:inline>
+    const celebrate = () => {
+      const layer = document.querySelector("#confettiLayer");
+      if (!layer) return;
+      const glyphs = ["♪", "★", "●", "◆", "🥬", "✦"];
+      const colors = ["#39c5bb", "#72e3d9", "#ffffff", "#ee7aa9", "#8278d7"];
+      for (let i = 0; i < 72; i++) {
+        const bit = document.createElement("span");
+        bit.className = "confetti";
+        bit.textContent = glyphs[i % glyphs.length];
+        const angle = Math.PI * 2 * i / 72 + Math.random() * .2;
+        const distance = 150 + Math.random() * 360;
+        bit.style.setProperty("--x", `${Math.cos(angle) * distance}px`);
+        bit.style.setProperty("--y", `${Math.sin(angle) * distance - 170}px`);
+        bit.style.setProperty("--r", `${Math.random() * 900 - 450}deg`);
+        bit.style.color = colors[i % colors.length];
+        layer.appendChild(bit);
+      }
+      setTimeout(() => layer.replaceChildren(), 1450);
+    };
+    document.querySelectorAll("[data-jump]").forEach((button) => button.addEventListener("click", () => document.querySelector(`#${button.dataset.jump}`)?.scrollIntoView({ behavior: "smooth" })));
+    window.addEventListener("baiyi:route", (event) => {
+      const result = event.detail;
+      const summary = document.querySelector("#routeSummary");
+      const advice = document.querySelector("#routeAdvice");
+      if (summary) summary.textContent = `推荐路线：${result.name} · ${result.desc}`;
+      if (advice) advice.innerHTML = `已经为你选好 <strong>${result.name}</strong>。点击对应卡片进入完整教程；完成后回到本页做 A+B 验收。`;
+    });
+    document.querySelector("#verifyButton")?.addEventListener("click", () => {
+      document.querySelector("#verifyMessage")?.removeAttribute("hidden");
+      window.dispatchEvent(new Event("baiyi:verified"));
+      celebrate();
+    });
+    document.querySelector("#finishButton")?.addEventListener("click", () => {
+      document.querySelector("#finishMessage")?.removeAttribute("hidden");
+      window.dispatchEvent(new Event("baiyi:finished"));
+      celebrate();
+    });
+  </script>
+</BaseLayout>
