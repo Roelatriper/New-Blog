@@ -7,7 +7,7 @@ const articles = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    category: z.enum(["配置指南", "基础原理", "科创情报", "协作文档"]),
+    category: z.enum(["配置指南", "基础原理", "科创情报", "个人杂谈"]),
     publishedAt: z.coerce.date(),
     updatedAt: z.coerce.date().optional(),
     readingMinutes: z.number().int().positive(),

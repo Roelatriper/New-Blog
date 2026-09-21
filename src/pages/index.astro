@@ -28,12 +28,15 @@ const cards = [mainGuide, ...entries];
   <main class="home-main shell">
     <section class="home-hero" id="about">
       <div class="hero-copy">
-        <div class="eyebrow">才子佳人，自是白衣卿相。</div>
-        <h1>≽^•⩊•^≼</h1>
+        <div class="eyebrow">才子词人，自是白衣卿相。</div>
+        <h1 class="hero-face" tabindex="0">
+          <span class="face-default">≽^•⩊•^≼</span>
+          <span class="face-hover" aria-hidden="true">≽(*´ω`*)≼</span>
+        </h1>
         <p class="lede">这里收录我整理的科创情报、工具配置和杂。挑感兴趣的读。</p>
       </div>
       <aside class="promise-card">
-        <div class="eyebrow">本站正在生长</div>
+        <div class="eyebrow">本站正在生长ing</div>
         <strong>Divide<br />et impera.</strong>
         <p>分而治之。</p>
       </aside>
@@ -41,9 +44,9 @@ const cards = [mainGuide, ...entries];
 
     <section id="articles">
       <div class="section-heading">
-        <div><div class="eyebrow">文章</div><h2>从这儿开始读。</h2></div>
+        <div><div class="eyebrow">文章</div><h2>从这儿开始读。</h2><h3>有配置需求？点右上的按钮。</h3></div>
         <div class="filters" aria-label="文章筛选">
-          {(["全部", "配置指南", "基础原理", "科创情报", "个人杂项"] as const).map((filter, index) => (
+          {(["全部", "配置指南", "基础原理", "科创情报", "个人杂谈"] as const).map((filter, index) => (
             <button class="filter-button" type="button" data-filter={filter} aria-pressed={index === 0 ? "true" : "false"}>{filter}</button>
           ))}
         </div>

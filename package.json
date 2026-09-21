@@ -19,5 +19,8 @@
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
     "typescript": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.2"
   }
 }

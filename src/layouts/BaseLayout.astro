@@ -1,6 +1,9 @@
 ---
 import "../styles/global.css";
 import Header from "../components/Header.astro";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 
 interface Props {
   title?: string;
@@ -8,9 +11,13 @@ interface Props {
 }
 
 const {
-  title = "白衣の博客 · 暂时没有想法。。",
+  title = "白衣の博客 · 不想上早八啊啊啊",
   description = "白衣整理的科创情报、工具配置与杂。"
 } = Astro.props;
+const faviconVersion = createHash("sha256")
+  .update(readFileSync(resolve("public/favicon.svg")))
+  .digest("hex")
+  .slice(0, 8);
 ---
 
 <!doctype html>
@@ -20,7 +27,7 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="color-scheme" content="light dark" />
-    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg?v=${faviconVersion}`} />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" crossorigin="anonymous" />
     <title>{title}</title>
     <script is:inline>
@@ -33,8 +40,8 @@ const {
     <slot />
     <footer class="site-footer">
       <div class="shell footer-inner">
-        <span>© {new Date().getFullYear()} 由Codex&Atri开发与管理</span>
-        <span>科创情报 · 工具配置 · 杂</span>
+        <span>© {new Date().getFullYear()} 由Atri与白衣开发与管理</span>
+        <span>当前版本:Alpha,All Rights Reserved.</span>
       </div>
     </footer>
     <script is:inline>

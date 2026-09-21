@@ -8,9 +8,9 @@ const base = import.meta.env.BASE_URL;
 
 <BaseLayout title="Windows C++ 环境配置指南 · 白衣" description="从比赛兼容到现代工具链，选择并配置适合自己的 Windows C++ 开发环境。">
   <header class="article-header">
-    <div class="eyebrow">配置指南 · Windows</div>
-    <h1>让第一行 C++，顺利跑起来。</h1>
-    <p class="lede">比赛规则优先；没有指定环境时，再根据折腾意愿、项目规模和磁盘占用选择。</p>
+    <div class="eyebrow">配置指南 · Windows向</div>
+    <h1>让代码，顺利跑起来。</h1>
+    <p class="lede">慢慢来，这里可没有假道场的絮絮叨叨，打打杀杀。</p>
     <div class="article-meta"><span>适合第一次配置环境的读者</span><span>约 12 分钟完成选择与验收</span></div>
   </header>
 
@@ -25,8 +25,7 @@ const base = import.meta.env.BASE_URL;
     <article class="article-content">
       <section class="article-panel" id="choose" data-progress="0">
         <div class="eyebrow">01 · 选择路线</div>
-        <h2>先问三个问题。</h2>
-        <p>你是否必须使用指定环境？你愿意配置编译器吗？你是否需要完整的大型项目能力？回答后，我会给出一条推荐路线。</p>
+        <h2>让我先问三个问题。</h2>
         <EnvironmentChooser />
         <div class="route-summary" id="routeSummary">还没有选择。你也可以直接查看下面四条路线。</div>
       </section>
@@ -35,35 +34,37 @@ const base = import.meta.env.BASE_URL;
         <div class="eyebrow">02 · 安装配置</div>
         <h2>进入对应教程。</h2>
         <p id="routeAdvice">每条路线都从可信下载来源开始，并用同一份 A+B 代码验收。这样遇到问题时，可以快速判断是编辑器、编译器还是程序本身出了问题。</p>
-        <div class="route-grid">
-          <a class="route-card" href={`${base}articles/redpanda-cpp/`}><strong>🐼 小熊猫 C++</strong><span>轻量、开箱即用，适合日常算法练习。</span></a>
-          <a class="route-card" href={`${base}articles/vscode-msys2/`}><strong>⌘ VS Code + MSYS2</strong><span>愿意理解工具链时，灵活且可持续。</span></a>
-          <a class="route-card" href={`${base}articles/visual-studio-2026/`}><strong>∞ Visual Studio 2026</strong><span>完整 Windows C++ IDE，适合大型项目。</span></a>
-          <a class="route-card" href={`${base}articles/devcpp-competition/`}><strong>🏁 Dev-C++ 5.11</strong><span>赛事明确指定时使用，不作为日常首选。</span></a>
+        <div class="route-grid" id="routeGrid">
+          <a class="route-card" data-route="redpanda-cpp" href={`${base}articles/redpanda-cpp/`}><strong>🐼 小熊猫 C++</strong><span>轻量、开箱即用，适合日常算法练习。</span></a>
+          <a class="route-card" data-route="vscode-msys2" href={`${base}articles/vscode-msys2/`}><strong>⌘ VS Code + MSYS2</strong><span>愿意理解工具链时，灵活且可持续。</span></a>
+          <a class="route-card" data-route="visual-studio-2026" href={`${base}articles/visual-studio-2026/`}><strong>∞ Visual Studio 2026</strong><span>完整 Windows C++ IDE，适合大型项目。</span></a>
+          <a class="route-card" data-route="devcpp-competition" href={`${base}articles/devcpp-competition/`}><strong>🏁 Dev-C++ 5.11</strong><span>赛事明确指定时使用，不作为日常首选。</span></a>
         </div>
       </section>
 
       <section class="article-panel" id="verify" data-progress="2">
         <div class="eyebrow">03 · A+B 验收</div>
-        <h2>用洛谷 P1001 验收。</h2>
-        <p>输入两个整数，输出它们的和。这一步同时验证保存、编译、运行、标准输入和标准输出。</p>
+        <h2>用洛谷 P1001 验收</h2>
+        <p>那么我们开始吧！用一道经典的A+B问题，开始你的Coding之路。</p>
         <pre class="code-block"><code>#include &lt;iostream&gt;
-
+using namespace std;
 int main() &#123;
-    int a, b;
-    std::cin &gt;&gt; a &gt;&gt; b;
-    std::cout &lt;&lt; a + b &lt;&lt; '\n';
-    return 0;
-&#125;</code></pre>
-        <p><strong>本地测试：</strong>输入 <code>1 2</code>，应当输出 <code>3</code>。随后把代码提交到 <a href="https://www.luogu.com.cn/problem/P1001" target="_blank" rel="noreferrer">洛谷 P1001</a>。</p>
-        <button class="primary-button" id="verifyButton" type="button">我已经成功运行 A+B</button>
-        <div class="success-message" id="verifyMessage" hidden>Accepted！基本环境已经配置成功。下一步，看看编辑器与编译器分别做了什么。</div>
+int a, b;
+cin &gt;&gt; a &gt;&gt; b;
+cout &lt;&lt; a + b &lt;&lt; '\n';
+return 0;
+&#125;
+</code></pre>
+        <p><strong>自行debug：</strong>输入 <code>1 2</code>，应当输出 <code>3</code>。随后，把代码提交到 <a href="https://www.luogu.com.cn/problem/P1001" target="_blank" rel="noreferrer">洛谷 P1001</a>。</p>
+        <button class="primary-button" id="verifyButton" type="button">我成功了！</button>
+        <div class="success-message" id="verifyMessage" hidden>Accepted！基本环境已经配置成功。下一步，让我们看看发生了什么。</div>
       </section>
 
       <section class="article-panel" id="principles" data-progress="3">
         <div class="eyebrow">04 · 理解原理</div>
-        <h2>别把编辑器当成编译器。</h2>
-        <p>你写下的是源代码；编辑器让你更舒服地写；编译器把代码翻译为机器能够执行的程序；调试器帮助你观察程序运行过程。</p>
+        <h2>首先，别把编辑器当成编译器。</h2>
+        <p>你写下的是源代码；编辑器能让你更舒服地写；编译器把代码翻译为机器能够执行的程序；而调试器帮助你观察程序运行过程。</p>
+        <p>能理解吗？你可以这样理清这些玩意。</p>
         <div class="concept-flow"><div><b>源代码</b><span>.cpp 文件</span></div><div><b>编译器</b><span>g++ / MSVC</span></div><div><b>可执行程序</b><span>.exe 文件</span></div></div>
         <p><a href={`${base}articles/toolchain-basics/`}>继续阅读：编辑器、编译器和代码是什么关系 →</a></p>
       </section>
@@ -77,6 +78,34 @@ int main() &#123;
       </section>
     </article>
   </div>
+  <dialog class="route-confirm" id="routeConfirm" aria-labelledby="routeConfirmTitle" aria-describedby="routeConfirmDescription">
+    <div class="eyebrow">切换教程</div>
+    <h2 id="routeConfirmTitle">这不是你选择的 IDE！真的要继续吗？</h2>
+    <p id="routeConfirmDescription"></p>
+    <form method="dialog" class="button-row">
+      <button class="primary-button" type="submit" value="continue">让我检查！</button>
+      <button class="secondary-button" type="submit" value="cancel">算了</button>
+    </form>
+  </dialog>
+  <section class="comments shell" aria-label="文章评论">
+    <h2>想说些什么？</h2>
+      <script is:inline src="https://giscus.app/client.js"
+            data-repo="roelatriper/New-Blog"
+            data-repo-id="R_kgDOUie9Wg"
+            data-category="Q&A"
+            data-category-id="DIC_kwDOUie9Ws4DGD7i"
+            data-mapping="pathname"
+            data-strict="0"
+            data-reactions-enabled="1"
+            data-emit-metadata="0"
+            data-input-position="top"
+            data-theme="preferred_color_scheme"
+            data-lang="zh-CN"
+            data-loading="lazy"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </section>  
   <LessonProgress />
   <div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div>
 
@@ -100,13 +129,52 @@ int main() &#123;
       }
       setTimeout(() => layer.replaceChildren(), 1450);
     };
-    document.querySelectorAll("[data-jump]").forEach((button) => button.addEventListener("click", () => document.querySelector(`#${button.dataset.jump}`)?.scrollIntoView({ behavior: "smooth" })));
-    window.addEventListener("baiyi:route", (event) => {
-      const result = event.detail;
+    const routeGrid = document.querySelector("#routeGrid");
+    const routeCards = [...document.querySelectorAll(".route-card[data-route]")];
+    const routeConfirm = document.querySelector("#routeConfirm");
+    let selectedRoute = null;
+    let pendingCard = null;
+    const applyRoute = (result) => {
+      if (!routeCards.some((card) => card.dataset.route === result?.slug)) return;
       const summary = document.querySelector("#routeSummary");
       const advice = document.querySelector("#routeAdvice");
       if (summary) summary.textContent = `推荐路线：${result.name} · ${result.desc}`;
-      if (advice) advice.innerHTML = `已经为你选好 <strong>${result.name}</strong>。点击对应卡片进入完整教程；完成后回到本页做 A+B 验收。`;
+      if (advice) {
+        const name = document.createElement("strong");
+        name.textContent = result.name;
+        advice.replaceChildren("已经为你选好 ", name, "。点击对应卡片进入完整教程；完成后回到本页做 A+B 验收。");
+      }
+      selectedRoute = result.slug;
+      routeGrid?.classList.add("has-selection");
+      routeCards.forEach((card) => card.classList.toggle("is-selected", card.dataset.route === selectedRoute));
+    };
+    document.querySelectorAll("[data-jump]").forEach((button) => button.addEventListener("click", () => document.querySelector(`#${button.dataset.jump}`)?.scrollIntoView({ behavior: "smooth" })));
+    window.addEventListener("baiyi:route", (event) => {
+      applyRoute(event.detail);
+      try { sessionStorage.setItem("baiyi:cpp-route", JSON.stringify(event.detail)); } catch {}
+    });
+    try {
+      const savedRoute = JSON.parse(sessionStorage.getItem("baiyi:cpp-route") || "null");
+      if (savedRoute) applyRoute(savedRoute);
+    } catch {}
+    routeCards.forEach((card) => card.addEventListener("click", (event) => {
+      if (!selectedRoute || card.dataset.route === selectedRoute) return;
+      event.preventDefault();
+      pendingCard = card;
+      const selectedName = routeCards.find((item) => item.dataset.route === selectedRoute)?.querySelector("strong")?.textContent?.trim();
+      const nextName = card.querySelector("strong")?.textContent?.trim();
+      const description = routeConfirm?.querySelector("#routeConfirmDescription");
+      if (description) description.textContent = `你选择的是 ${selectedName}，现在准备查看 ${nextName}。`;
+      if (routeConfirm) {
+        routeConfirm.returnValue = "";
+        routeConfirm.showModal();
+      }
+    }));
+    routeConfirm?.addEventListener("close", () => {
+      const card = pendingCard;
+      pendingCard = null;
+      if (routeConfirm.returnValue === "continue" && card) window.location.assign(card.href);
+      else card?.focus();
     });
     document.querySelector("#verifyButton")?.addEventListener("click", () => {
       document.querySelector("#verifyMessage")?.removeAttribute("hidden");
