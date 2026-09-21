@@ -3,7 +3,7 @@ title: "VS Code + MSYS2：理解工具链路线"
 description: "安装现代 GCC 工具链，让 VS Code 负责编写、构建与调试。"
 category: "配置指南"
 publishedAt: 2026-09-20
-updatedAt: 2026-09-20
+updatedAt: 2026-09-21
 readingMinutes: 15
 featured: true
 accent: ink
@@ -14,7 +14,9 @@ order: 10
 
 VS Code 是编辑器，不自带 C++ 编译器。C/C++ 扩展提供代码补全和调试适配，真正把 `.cpp` 变成 `.exe` 的是 GCC；这里通过 MSYS2 安装并更新 GCC、GDB 等工具。
 
-这条路线步骤比小熊猫 C++ 多，但每一层职责都很清楚，后续加入 CMake、第三方库或多文件项目时更容易维护。
+这条路线步骤比小熊猫 C++ 等解决方案多，但每一层职责都很清楚，后续加入 CMake、第三方库或多文件项目时更容易维护。
+
+我个人倾向于推荐使用这样的解决方案，在安装与使用中，你将逐渐感受到使用灵活的开发环境所带来的便利。
 
 ## 第一步：安装 VS Code 与扩展
 
@@ -80,7 +82,7 @@ int main() {
 }
 ```
 
-打开 VS Code 集成终端，执行：
+打开 VS Code 集成终端（Terminal），执行：
 
 ```powershell
 g++ main.cpp -std=c++17 -Wall -Wextra -g -o main.exe
@@ -122,13 +124,17 @@ g++ main.cpp -std=c++17 -Wall -Wextra -g -o main.exe
 }
 ```
 
-按 `Ctrl + Shift + B` 即可构建当前文件。对于多个 `.cpp` 文件，不要长期使用 `${file}` 模式；应改用 CMake、Make 或明确列出源文件。MSYS2 从 2024 年起默认关闭了部分通配符展开行为，直接依赖 `*.cpp` 可能与旧教程表现不同。
+按 `Ctrl + Shift + B` 即可构建当前文件。`${file}` 只代表当前打开的文件：如果 `main.cpp` 用到了 `add.cpp` 中定义的函数，编译时就需要把两个文件都交给编译器，例如 `g++ main.cpp add.cpp -o app.exe`。文件变多后，可以用 CMake 或 Make 管理，不必逐个手写命令。这里不做深入讨论。
+
+有些人可能会说：那我搜到的教程让我写成`*.cpp`呢?
+
+这是旧写法，MSYS2 自 2024 年不再默认由 MinGW 程序自行展开这类通配符；如果调用它的环境没有先展开，编译器收到的就只是字面量 `*.cpp`。在 MSYS2 Bash 中直接运行 `g++ *.cpp -o app.exe` 则是另一回事：Bash 通常会先把 `*.cpp` 展开成实际文件名。
 
 ## 第六步：配置断点调试
 
 按 `F5`，选择 C++ (GDB/LLDB)，再选择 `g++.exe`。自动配置正常时，VS Code 会生成 `launch.json` 并调用 `C:\msys64\ucrt64\bin\gdb.exe`。
 
-在 `std::cin` 后一行设置断点。程序停下后，观察变量 `a` 与 `b`，再单步执行输出语句。这一步同时验证编译参数 `-g`、GDB 与 VS Code 调试适配器。
+在 `cin` 后一行设置断点。程序停下后，观察变量 `a` 与 `b`，再单步执行输出语句。这一步同时验证编译参数 `-g`、GDB 与 VS Code 调试适配器。
 
 ## 常见问题
 

@@ -36,7 +36,7 @@ order: 100
 
 以及我的[b站](https://space.bilibili.com/312232735)
 
-如果你愿意，也可以加入我的qq群吹吹水:[白衣的吹水群](https://qun.qq.com/universal-share/share?ac=1&authKey=L5fjTJyVqpTIOvMR%2BF80Xo3Gn%2Blv9DDfFo2fAxNnXmMJ%2FMIqfDgamFmHjp%2Fl%2FhJe&busi_data=eyJncm91cENvZGUiOiI4NzIzMDM1ODAiLCJ0b2tlbiI6Ijd1UWJLbnQ3S0liNHV2ekRsVmpYV1V3UklwUE1HaDFWMkcxYkJHSndMOERzUms0QnRzZDVaSkp3bXpCYTBVNTAiLCJ1aW4iOiIyNzkxOTE3ODkwIn0%3D&data=8MSRsytVN6PhWWPel1CtZX8it2KQQBghFqSoJlbsZZEQge63CXKlXkAgUdNpbdQxu1PRe0SoAvp7UWb9yM1YJQ&svctype=4&tempid=h5_group_info)
+如果你愿意，也可以加入我的qq群吹吹水:[白衣的吹水群/或使用群号搜索:872303580](https://qun.qq.com/universal-share/share?ac=1&authKey=L5fjTJyVqpTIOvMR%2BF80Xo3Gn%2Blv9DDfFo2fAxNnXmMJ%2FMIqfDgamFmHjp%2Fl%2FhJe&busi_data=eyJncm91cENvZGUiOiI4NzIzMDM1ODAiLCJ0b2tlbiI6Ijd1UWJLbnQ3S0liNHV2ekRsVmpYV1V3UklwUE1HaDFWMkcxYkJHSndMOERzUms0QnRzZDVaSkp3bXpCYTBVNTAiLCJ1aW4iOiIyNzkxOTE3ODkwIn0%3D&data=8MSRsytVN6PhWWPel1CtZX8it2KQQBghFqSoJlbsZZEQge63CXKlXkAgUdNpbdQxu1PRe0SoAvp7UWb9yM1YJQ&svctype=4&tempid=h5_group_info)
 
 ## 使用鸣谢
 

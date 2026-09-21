@@ -19,7 +19,7 @@ order: 40
 ## 下载与安装
 
 1. 打开[Visual Studio 官方下载页](https://visualstudio.microsoft.com/downloads/)。
-2. 学习和个人使用可选择 **Visual Studio Community 2026**。组织使用前应确认 Community 许可证是否适用。
+2. 学习和个人使用可选择 **Visual Studio Community 2026**。组织使用前应确认 Community 许可证是否适用。社区版是免费的，请注意。
 3. 启动 Visual Studio Installer。
 4. 在“工作负载”页面勾选 **使用 C++ 的桌面开发（Desktop development with C++）**。
 5. 保留默认的 MSVC、Windows SDK 和 CMake 工具。暂时不需要 MFC、ATL、游戏开发或 Linux 工作负载。
@@ -37,11 +37,11 @@ order: 40
 
 ```cpp
 #include <iostream>
-
+using namespace std;
 int main() {
     int a, b;
-    std::cin >> a >> b;
-    std::cout << a + b << '\n';
+    cin >> a >> b;
+    cout << a + b << '\n';
     return 0;
 }
 ```
