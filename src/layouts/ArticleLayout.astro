@@ -36,6 +36,41 @@ const formatDate = (date: Date) => new Intl.DateTimeFormat("zh-CN", { dateStyle:
     </nav>
     <article class="article-content"><slot /></article>
   </div>
+  <script src="https://giscus.app/client.js"
+        data-repo="roelatriper/New-Blog"
+        data-repo-id="R_kgDOUie9Wg"
+        data-category="Q&A"
+        data-category-id="DIC_kwDOUie9Ws4DGD7i"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="preferred_color_scheme"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+</script>
+  <section class="comments shell" aria-label="文章评论">
+    <h2>评论</h2>
+      <script src="https://giscus.app/client.js"
+          data-repo="roelatriper/New-Blog"
+          data-repo-id="R_kgDOUie9Wg"
+          data-category="Q&A"
+          data-category-id="DIC_kwDOUie9Ws4DGD7i"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="preferred_color_scheme"
+          data-lang="zh-CN"
+          data-loading="lazy"
+          crossorigin="anonymous"
+          async>
+      </script>
+  </section>
   <script is:inline>
     const progress = document.querySelector("#readingProgress");
     const updateReadingProgress = () => {
