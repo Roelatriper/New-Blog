@@ -6,10 +6,10 @@ import LessonProgress from "../../../components/LessonProgress.astro";
 const base = import.meta.env.BASE_URL;
 ---
 
-<BaseLayout title="Windows C++ 环境配置指南 · 白衣" description="从比赛兼容到现代工具链，选择并配置适合自己的 Windows C++ 开发环境。">
+<BaseLayout title="Windows C++ 环境配置指南 · 白衣" description="从比赛兼容到现代工具链，只要顺手的都是好IDE.">
   <header class="article-header">
     <div class="eyebrow">配置指南 · Windows向</div>
-    <h1>让代码，顺利跑起来。</h1>
+    <h1>...都从微不足道开始。</h1>
     <p class="lede">慢慢来，这里可没有假道场的絮絮叨叨，打打杀杀。</p>
     <div class="article-meta"><span>适合第一次配置环境的读者</span><span>约 12 分钟完成选择与验收</span></div>
   </header>
@@ -25,7 +25,7 @@ const base = import.meta.env.BASE_URL;
     <article class="article-content">
       <section class="article-panel" id="choose" data-progress="0">
         <div class="eyebrow">01 · 选择路线</div>
-        <h2>让我先问三个问题。</h2>
+        <h2>先问三个问题。</h2>
         <EnvironmentChooser />
         <div class="route-summary" id="routeSummary">还没有选择。你也可以直接查看下面四条路线。</div>
       </section>
@@ -33,7 +33,7 @@ const base = import.meta.env.BASE_URL;
       <section class="article-panel" id="install" data-progress="1">
         <div class="eyebrow">02 · 安装配置</div>
         <h2>进入对应教程。</h2>
-        <p id="routeAdvice">每条路线都从可信下载来源开始，并用同一份 A+B 代码验收。这样遇到问题时，可以快速判断是编辑器、编译器还是程序本身出了问题。</p>
+        <p id="routeAdvice">谨记：十年OI一场空，不开long long见祖宗。</p>
         <div class="route-grid" id="routeGrid">
           <a class="route-card" data-route="redpanda-cpp" href={`${base}articles/redpanda-cpp/`}><strong>🐼 小熊猫 C++</strong><span>轻量、开箱即用，适合日常算法练习。</span></a>
           <a class="route-card" data-route="vscode-msys2" href={`${base}articles/vscode-msys2/`}><strong>⌘ VS Code + MSYS2</strong><span>愿意理解工具链时，灵活且可持续。</span></a>
@@ -72,9 +72,9 @@ return 0;
       <section class="article-panel" id="finish">
         <div class="eyebrow">完成</div>
         <h2>你已经有了一条可复现的路线。</h2>
-        <p>保存你选择的教程链接。换电脑或帮助同学配置时，仍然从“选路线 → 装工具 → 跑 A+B → 看懂工具链”开始。</p>
+        <p>保存你选择的教程链接。以后换电脑或帮助同学配置时，仍然从“选路线 → 装工具 → 跑 A+B → 看懂工具链”开始。</p>
         <button class="primary-button" id="finishButton" type="button">完成本篇教程</button>
-        <div class="success-message" id="finishMessage" hidden>教程完成。现在你不仅能运行代码，也知道是谁让它跑起来的。</div>
+        <div class="success-message" id="finishMessage" hidden>Wonderful Answer！现在你不仅能运行代码，也知道是谁让它跑起来的。</div>
       </section>
     </article>
   </div>
@@ -142,7 +142,7 @@ return 0;
       if (advice) {
         const name = document.createElement("strong");
         name.textContent = result.name;
-        advice.replaceChildren("已经为你选好 ", name, "。点击对应卡片进入完整教程；完成后回到本页做 A+B 验收。");
+        advice.replaceChildren("已选好 ", name, "。点击对应卡片进入完整教程。");
       }
       selectedRoute = result.slug;
       routeGrid?.classList.add("has-selection");
@@ -164,7 +164,7 @@ return 0;
       const selectedName = routeCards.find((item) => item.dataset.route === selectedRoute)?.querySelector("strong")?.textContent?.trim();
       const nextName = card.querySelector("strong")?.textContent?.trim();
       const description = routeConfirm?.querySelector("#routeConfirmDescription");
-      if (description) description.textContent = `你选择的是 ${selectedName}，现在准备查看 ${nextName}。`;
+      if (description) description.textContent = `你选择的是 ${selectedName}，现在准备查看 ${nextName} 方案。`;
       if (routeConfirm) {
         routeConfirm.returnValue = "";
         routeConfirm.showModal();
