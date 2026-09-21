@@ -1,43 +1,36 @@
 ---
-title: "Visual Studio 2026：完整 IDE 路线"
-description: "适合 Windows C++ 项目、图形调试和多人协作的一体化开发环境。"
+title: "Visual Studio 2026：用完整 IDE 跑 C++"
+description: "选对 C++ 工作负载，创建控制台项目，在 Visual Studio 中运行 A+B。"
 category: "配置指南"
 publishedAt: 2026-09-20
-updatedAt: 2026-09-20
-readingMinutes: 9
+updatedAt: 2026-09-22
+readingMinutes: 7
 featured: false
 accent: violet
 order: 40
 ---
 
-## 这条路线适合谁
+准备做 Windows C++ 项目、希望项目管理和编译工具都在一个软件里？选择 Visual Studio。它比小熊猫 C++ 占用更多空间，但不需要再单独安装 GCC。这篇只做一件事：让你在 Visual Studio 里建项目并运行 A+B。
 
-当你需要完整项目管理、断点调试、性能分析或 Windows 原生开发时，Visual Studio 2026 是最省心的一体化选择。它自带 MSVC 编译器与调试器，不需要手工把编辑器、编译器和插件拼起来。
+## 1. 安装 C++ 工作负载
 
-它的代价是占用较大。微软给出的 Visual Studio 2026 系统要求显示，安装空间会根据所选功能在约 2.3 GB 到 60 GB 之间变化。只安装“使用 C++ 的桌面开发”工作负载，可以避免无关组件占用空间。
+1. 打开 [Visual Studio 官方下载页](https://visualstudio.microsoft.com/downloads/)，选择 **Visual Studio Community 2026**。个人学习可以使用 Community；团队或组织使用前请查看许可条件。
+2. 运行下载的 Visual Studio Installer。在“工作负载”页面勾选 **使用 C++ 的桌面开发**（Desktop development with C++）。
+3. 保留该工作负载默认选择的 MSVC 和 Windows SDK。查看安装器显示的预计空间，再点击“安装”。
 
-## 下载与安装
+> **焚决：**只装 Visual Studio 外壳，未勾选“使用 C++ 的桌面开发”，创建项目时就可能找不到 C++ 控制台模板。这里是最容易漏的一格。
 
-1. 打开[Visual Studio 官方下载页](https://visualstudio.microsoft.com/downloads/)。
-2. 学习和个人使用可选择 **Visual Studio Community 2026**。组织使用前应确认 Community 许可证是否适用。社区版是免费的，请注意。
-3. 启动 Visual Studio Installer。
-4. 在“工作负载”页面勾选 **使用 C++ 的桌面开发（Desktop development with C++）**。
-5. 保留默认的 MSVC、Windows SDK 和 CMake 工具。暂时不需要 MFC、ATL、游戏开发或 Linux 工作负载。
-6. 查看右下角预计占用，确认安装位置后开始安装。
+## 2. 创建第一个控制台项目
 
-微软的[C++ 安装说明](https://learn.microsoft.com/cpp/build/vscpp-step-0-installation)也强调：C++ 工具不会随最小安装自动加入，必须选择对应工作负载。
-
-## 创建控制台项目
-
-1. 启动 Visual Studio，选择“创建新项目”。
-2. 在语言中选择 C++，搜索“控制台”。
-3. 选择“控制台应用”，点击下一步。
-4. 项目名可填写 `APlusB`，位置使用简单英文路径。
-5. 创建后找到包含 `main` 函数的 `.cpp` 文件，替换为下面的代码。
+1. 打开 Visual Studio，点击“创建新项目”。
+2. 在搜索框输入“控制台”，把语言筛选为 **C++**，选择“控制台应用”。
+3. 项目名称填 `APlusB`，选一个容易找到的文件夹，点击“创建”。
+4. 在解决方案资源管理器里打开项目生成的 `.cpp` 文件，找到 `main` 函数，用下面这份代码替换文件内容，然后按 `Ctrl + S` 保存。
 
 ```cpp
 #include <iostream>
 using namespace std;
+
 int main() {
     int a, b;
     cin >> a >> b;
@@ -46,41 +39,20 @@ int main() {
 }
 ```
 
-按 `Ctrl + F5` 启动但不调试。输入 `1 2`，应输出 `3`。
+> **焚决：**Visual Studio 和 VS Code 是两个不同软件。这里要**新建 C++ 控制台项目**，不要只在 Visual Studio 里打开一个孤零零的 `main.cpp` 就等着运行按钮替你创建项目。
 
-## Debug 与 Release
+## 3. 在 Visual Studio 中运行
 
-- **Debug：** 保留调试信息，关闭大部分优化，适合断点、单步和查看变量。
-- **Release：** 开启优化，适合最终构建和性能测试。
+按 `Ctrl + F5`（菜单“调试 → 开始执行〔不调试〕”）。控制台窗口打开后直接输入 `1 2`，按回车；输出 `3` 就成功了。`Ctrl + F5` 会完成构建并启动程序，不需要另开命令行输入编译命令。
 
-学习阶段保持 Debug 即可。算法题评测只接收源代码，因此本地配置不会被一并提交；真正影响结果的是代码、语言标准和评测端编译器。
+你也可以把这份代码提交到[洛谷 P1001](https://www.luogu.com.cn/problem/P1001)。本地输出 `3` 说明本地环境跑通；是否通过在线评测，以洛谷页面结果为准。
 
-## 设置语言标准
+> **焚决：**每次改完代码先保存，再按 `Ctrl + F5`。如果要打断点，`F5` 是启动调试；这篇先不教调试操作。
 
-右键项目 → 属性 → C/C++ → 语言 → C++ 语言标准。学习基础内容可以选择 C++17；课程或比赛另有规定时，以规定为准。
+## 卡住时，先看这里
 
-Visual Studio 2026 的新项目模板可能默认使用更高标准。写比赛代码前仍要主动检查，避免误用评测环境不支持的语法。
+- **找不到“控制台应用”模板：**打开 Visual Studio Installer，找到当前版本并点“修改”，补选“使用 C++ 的桌面开发”。
+- **出现生成错误：**打开“错误列表”或“输出”，先看第一条编译错误；确认你替换的是项目内的 `.cpp` 文件，并且代码与上面一致。
+- **程序窗口马上关闭：**确认使用的是 `Ctrl + F5`，而不是双击生成的 `.exe`。
 
-## 常见问题
-
-### 找不到 C++ 模板
-
-打开 Visual Studio Installer，选择当前安装项的“修改”，补选“使用 C++ 的桌面开发”。
-
-### 生成成功但窗口消失
-
-使用 `Ctrl + F5`；`F5` 是启动调试，程序结束时窗口行为可能不同。
-
-### IntelliSense 报错但能编译
-
-先执行“生成 → 重新生成解决方案”。若编译器成功而编辑器仍标红，再检查项目的包含目录、语言标准和 IntelliSense 缓存。
-
-## 下一步
-
-阅读[编辑器、编译器和代码是什么关系](../toolchain-basics/)，你会更清楚 Visual Studio 为什么叫“集成开发环境”。完成后回到[环境选择总指南](../cpp-environment/)做统一验收。
-
-### 参考
-
-- [Visual Studio 2026 官方下载](https://visualstudio.microsoft.com/downloads/)
-- [安装 Visual Studio 的 C/C++ 支持](https://learn.microsoft.com/cpp/build/vscpp-step-0-installation)
-- [Visual Studio 2026 系统要求](https://learn.microsoft.com/visualstudio/releases/2026/vs-system-requirements)
+学习 A+B 时不用先改 Debug/Release 或语言标准；如果课程、比赛指定了标准，再到“项目 → 属性 → C/C++ → 语言 → C++ 语言标准”按要求调整。想理解 Visual Studio 为什么能一次包办这些事，读[原理篇](../toolchain-basics/)；想重新选软件，回到[环境选择总指南](../cpp-environment/)。

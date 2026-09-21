@@ -1,79 +1,78 @@
 ---
-title: "VS Code + MSYS2：理解工具链路线"
-description: "安装现代 GCC 工具链，让 VS Code 负责编写、构建与调试。"
+title: "VS Code + MSYS2：在编辑器里运行 C++"
+description: "装好 GCC，让 VS Code 的运行按钮编译并启动你的第一份 C++ 程序。"
 category: "配置指南"
 publishedAt: 2026-09-20
-updatedAt: 2026-09-21
-readingMinutes: 15
+updatedAt: 2026-09-22
+readingMinutes: 12
 featured: true
 accent: ink
 order: 10
 ---
 
-## 先理解你要安装什么
+这条路线以 **x86-64 Windows** 为例，适合想使用 VS Code、又愿意花一点时间把 C++ 环境配好的同学。**完成标志很简单：在 VS Code 里点运行按钮，输入 `1 2`，看到 `3`。**
 
-VS Code 是编辑器，不自带 C++ 编译器。C/C++ 扩展提供代码补全和调试适配，真正把 `.cpp` 变成 `.exe` 的是 GCC；这里通过 MSYS2 安装并更新 GCC、GDB 等工具。
+VS Code 本身不带 C++ 编译器。我们用 **MSYS2** 安装 GCC，再让 VS Code 调用它。下面只安装一次；以后新建单文件题目，直接在 VS Code 里编译运行。
 
-这条路线步骤比小熊猫 C++ 等解决方案多，但每一层职责都很清楚，后续加入 CMake、第三方库或多文件项目时更容易维护。
+## 1. 装 VS Code 和 C/C++ 扩展
 
-我个人倾向于推荐使用这样的解决方案，在安装与使用中，你将逐渐感受到使用灵活的开发环境所带来的便利。
+1. 从 [VS Code 官网](https://code.visualstudio.com/)下载安装并打开。
+2. 点击左侧“四个方块”扩展图标，搜索 **C/C++**，安装发布者为 **Microsoft** 的扩展。
 
-## 第一步：安装 VS Code 与扩展
+> 此处不需要另外安装 Code Runner。后面用的是 Microsoft C/C++ 扩展提供的运行入口。
 
-1. 从 [VS Code 官网](https://code.visualstudio.com/)下载安装程序。
-2. 安装时勾选“添加到 PATH”和“通过 Code 打开”相关选项，方便从终端与文件夹启动。
-3. 打开扩展页面，安装 Microsoft 发布的 **C/C++** 扩展。发布者应显示为 Microsoft。
+## 2. 用 MSYS2 装编译器
 
-## 第二步：安装 MSYS2
-
-1. 打开 [MSYS2 官方安装页](https://www.msys2.org/)。
-2. 下载 64 位安装程序并使用默认目录 `C:\msys64`。
-3. 安装结束后启动 **MSYS2 UCRT64** 终端。不要使用名称只有“MSYS”的终端来编译 Windows 程序。
-4. 先更新基础系统：
+1. 从 [MSYS2 官网](https://www.msys2.org/)下载 x86-64 安装程序，安装位置保持默认的 `C:\msys64`。
+2. 安装完成后打开 **MSYS2 UCRT64** 终端。开始菜单里可能还有一个叫“MSYS2 MSYS”的入口，这篇不要选它。
+3. 在 **UCRT64** 终端粘贴下面这行，按回车更新：
 
 ```bash
 pacman -Syu
 ```
 
-如果终端提示关闭，请关闭后重新打开 **MSYS2 UCRT64**，再次运行 `pacman -Syu`，直到没有核心更新需要继续。
+如果它要求关掉终端，就关闭并重新打开 **MSYS2 UCRT64**，再运行一次 `pacman -Syu`，直到更新完成。
 
-5. 安装完整的 MinGW-w64 UCRT64 工具链：
+4. 接着在同一个 **UCRT64** 终端安装工具链：
 
 ```bash
 pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain
 ```
 
-出现包选择列表时直接按 Enter 接受默认全部安装，再输入 `Y` 确认。
+出现软件包选择时直接按回车接受默认选择；询问是否继续时输入 `Y` 再回车。等它装完，不要提前关闭窗口。
 
-VS Code 的[官方 MinGW 指南](https://code.visualstudio.com/docs/cpp/config-mingw)同样使用这套 UCRT64 工具链。MSYS2 当前的 GCC 单包名是 `mingw-w64-ucrt-x86_64-gcc`；安装完整 toolchain 还会同时获得 GDB 与常用构建工具。
+> 这一步会装好 `g++.exe`。它才是稍后真正编译 `main.cpp` 的程序；扩展本身不会帮你下载编译器。
 
-## 第三步：加入 PATH
+## 3. 让 VS Code 找到 `g++`
 
-把下面目录加入 Windows 用户环境变量 `Path`：
+1. 在 Windows 开始菜单搜索“编辑账户的环境变量”（也可能显示“编辑系统环境变量”）。打开“环境变量”，在**用户变量**里选中 `Path`，点击“编辑 → 新建”。
+2. 添加这一行，然后一路点“确定”保存：
 
 ```text
 C:\msys64\ucrt64\bin
 ```
 
-操作完成后，**彻底关闭并重新打开 VS Code 和终端**。旧进程不会自动读取新的环境变量。
-
-在 PowerShell 中检查：
+3. **彻底关闭 VS Code，再重新打开。**VS Code 需要重新读取你刚改的 `Path`。
+4. 在 VS Code 中打开“终端 → 新建终端”，选择 **PowerShell**，输入：
 
 ```powershell
 g++ --version
-gdb --version
 where.exe g++
 ```
 
-`where.exe g++` 应优先显示 `C:\msys64\ucrt64\bin\g++.exe`。如果出现其他 MinGW 路径，说明电脑里存在多套编译器，需要调整 Path 顺序。
+看到版本号，且 `where.exe g++` 的第一条是 `C:\msys64\ucrt64\bin\g++.exe`，再继续下一步。这里的终端只用来检查安装是否到位；编译运行会从 VS Code 的按钮完成。
 
-## 第四步：创建并编译 A+B
+> 如果提示找不到 `g++`，先别改代码。回头检查 UCRT64 工具链有没有安装、`Path` 有没有少写 `ucrt64\bin`，以及 VS Code 是否真的重启过。
 
-新建一个英文路径文件夹，例如 `D:\code\a-plus-b`，用 VS Code 打开整个文件夹，再创建 `main.cpp`：
+## 4. 在 VS Code 里编译运行 A+B
+
+1. 新建一个文件夹，例如 `D:\code\a-plus-b`，在 VS Code 中选择“文件 → 打开文件夹”，打开它。若弹出工作区信任提示，你自己创建的文件夹可以选择信任。
+2. 在左侧文件列表点“新建文件”，命名为 `main.cpp`。粘贴下面的代码，并按 `Ctrl + S` 保存：
 
 ```cpp
 #include <iostream>
 using namespace std;
+
 int main() {
     int a, b;
     cin >> a >> b;
@@ -82,81 +81,19 @@ int main() {
 }
 ```
 
-打开 VS Code 集成终端（Terminal），执行：
+3. 保持 `main.cpp` 打开，点击编辑器**右上角的三角形运行按钮**。如果有下拉选项，选择“运行 C/C++ 文件”（Run C/C++ File）；首次询问编译器时，选路径在 `C:\msys64\ucrt64\bin` 下的 **g++.exe**。
+4. 等待编译完成，在 VS Code 底部的**终端（Terminal）**输入 `1 2`，按回车。看到 `3` 就完成了。
 
-```powershell
-g++ main.cpp -std=c++17 -Wall -Wextra -g -o main.exe
-.\main.exe
-```
+> 第一次选择编译器后，扩展可能在 `.vscode` 文件夹生成 `tasks.json`。这是它保存编译方式的配置文件；现在不用手写或逐项理解它。
 
-输入 `1 2`，看到 `3`，说明编译器与程序本身都没有问题。
+想核对在线评测，可把同一份代码提交到[洛谷 P1001](https://www.luogu.com.cn/problem/P1001)。本地看到 `3` 是本地环境跑通，评测是否 Accepted 以洛谷页面为准。
 
-## 第五步：让 VS Code 调用编译器
+## 卡住时，按现象处理
 
-保持 `main.cpp` 为当前文件，点击右上角运行按钮，第一次运行时选择带有 `g++.exe` 的“生成并调试活动文件”选项。VS Code 会在 `.vscode` 目录生成 `tasks.json`。
+- **没看到运行按钮或 C/C++ 选项：**确认 `main.cpp` 是当前打开的文件，并确认 Microsoft 的 C/C++ 扩展已安装且启用。
+- **编译器列表没有 UCRT64 的 `g++.exe`：**先回到第 3 步，确认 `where.exe g++` 的结果；如果电脑里有多套 GCC，要选 `C:\msys64\ucrt64\bin\g++.exe`，不要凭“都是 g++”随便选。
+- **点了按钮，只在“输出”面板看到文字，无法输入 `1 2`：**确认选的是 C/C++ 的“运行 C/C++ 文件”，并切到底部的**终端**标签。不要用 Code Runner 的“输出”面板当输入窗口。
+- **代码标红但编译成功：**用命令面板执行“C/C++: 选择 IntelliSense 配置”，也选 UCRT64 的 `g++.exe`。红色波浪线和真正的编译错误不是同一回事。
+- **想用断点：**运行按钮旁可选择调试 C/C++ 文件；这篇只负责让程序跑通，不展开 Debug 配置。
 
-如果自动检测失败，可建立 `.vscode/tasks.json`：
-
-```json
-{
-  "version": "2.0.0",
-  "tasks": [
-    {
-      "type": "cppbuild",
-      "label": "C/C++: g++.exe 生成活动文件",
-      "command": "C:\\msys64\\ucrt64\\bin\\g++.exe",
-      "args": [
-        "-fdiagnostics-color=always",
-        "-g",
-        "-Wall",
-        "-Wextra",
-        "-std=c++17",
-        "${file}",
-        "-o",
-        "${fileDirname}\\${fileBasenameNoExtension}.exe"
-      ],
-      "options": { "cwd": "${fileDirname}" },
-      "problemMatcher": ["$gcc"],
-      "group": { "kind": "build", "isDefault": true },
-      "detail": "使用 MSYS2 UCRT64 的 g++ 编译当前文件"
-    }
-  ]
-}
-```
-
-按 `Ctrl + Shift + B` 即可构建当前文件。`${file}` 只代表当前打开的文件：如果 `main.cpp` 用到了 `add.cpp` 中定义的函数，编译时就需要把两个文件都交给编译器，例如 `g++ main.cpp add.cpp -o app.exe`。文件变多后，可以用 CMake 或 Make 管理，不必逐个手写命令。这里不做深入讨论。
-
-有些人可能会说：那我搜到的教程让我写成`*.cpp`呢?
-
-这是旧写法，MSYS2 自 2024 年不再默认由 MinGW 程序自行展开这类通配符；如果调用它的环境没有先展开，编译器收到的就只是字面量 `*.cpp`。在 MSYS2 Bash 中直接运行 `g++ *.cpp -o app.exe` 则是另一回事：Bash 通常会先把 `*.cpp` 展开成实际文件名。
-
-## 第六步：配置断点调试
-
-按 `F5`，选择 C++ (GDB/LLDB)，再选择 `g++.exe`。自动配置正常时，VS Code 会生成 `launch.json` 并调用 `C:\msys64\ucrt64\bin\gdb.exe`。
-
-在 `cin` 后一行设置断点。程序停下后，观察变量 `a` 与 `b`，再单步执行输出语句。这一步同时验证编译参数 `-g`、GDB 与 VS Code 调试适配器。
-
-## 常见问题
-
-### `g++` 不是内部或外部命令
-
-检查工具链是否安装成功、Path 是否写成 `C:\msys64\ucrt64\bin`，并重新启动全部终端。不要把 `C:\msys64\usr\bin` 当作这条路线的 GCC 路径。
-
-### 运行按钮找不到编译器
-
-先在 VS Code 终端执行 `g++ --version`。如果终端都找不到，先修复 Path；如果终端能找到，使用命令面板执行“C/C++: 编辑配置(UI)”并把编译器路径指向 UCRT64 的 `g++.exe`。
-
-### 代码能编译但出现红色波浪线
-
-执行“C/C++: 选择 IntelliSense 配置”，选择同一个 UCRT64 `g++.exe`。编译配置与 IntelliSense 配置是两套信息，必须指向同一工具链。
-
-## 下一步
-
-回到[环境选择总指南](../cpp-environment/)完成在线评测验收，再阅读[编辑器、编译器和代码是什么关系](../toolchain-basics/)。
-
-### 参考
-
-- [VS Code：Using GCC with MinGW](https://code.visualstudio.com/docs/cpp/config-mingw)
-- [MSYS2 安装说明](https://www.msys2.org/)
-- [MSYS2 环境说明](https://www.msys2.org/docs/environments/)
-- [MSYS2 UCRT64 GCC 软件包](https://packages.msys2.org/packages/mingw-w64-ucrt-x86_64-gcc)
+本文的运行按钮按**当前打开的单个 `.cpp` 文件**构建。以后写多文件项目时，别在配置里直接写 `*.cpp` 来赌通配符是否展开；应明确列出源文件或使用 Make/CMake。想弄明白编辑器、编译器和这些配置文件的关系，再读[原理篇](../toolchain-basics/)；想换路线，回到[环境选择总指南](../cpp-environment/)。
