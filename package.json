@@ -12,8 +12,12 @@
   },
   "dependencies": {
     "@astrojs/check": "latest",
+    "@astrojs/markdown-remark": "^7.3.1",
     "@giscus/react": "^3.1.0",
     "astro": "latest",
+    "katex": "^0.18.7",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
     "typescript": "latest"
   }
 }

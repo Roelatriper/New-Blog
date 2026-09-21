@@ -1,4 +1,6 @@
 import { defineConfig } from "astro/config";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 
 const [owner = "", repository = ""] = (process.env.GITHUB_REPOSITORY ?? "/").split("/");
 const isUserSite = repository.toLowerCase() === `${owner}.github.io`.toLowerCase();
@@ -9,5 +11,9 @@ export default defineConfig({
   site,
   base,
   output: "static",
-  trailingSlash: "always"
+  trailingSlash: "always",
+  markdown: {
+    remarkPlugins: [remarkMath],
+    rehypePlugins: [rehypeKatex],
+  },
 });
