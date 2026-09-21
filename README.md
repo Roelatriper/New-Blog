@@ -33,7 +33,7 @@ npm run new:article -- "文章标题" english-slug
 
 | 想修改什么 | 文件位置 |
 | --- | --- |
-| 首页自我介绍和“三份承诺” | `src/pages/index.astro` |
+| 首页更改 | `src/pages/index.astro` |
 | 网站名称、导航栏 | `src/components/Header.astro` |
 | 全站颜色、字号、卡片和暗色模式 | `src/styles/global.css` |
 | C++ 环境推荐与总流程 | `src/pages/articles/cpp-environment/index.astro` |
@@ -44,7 +44,7 @@ npm run new:article -- "文章标题" english-slug
 
 ## 添加文章
 
-推荐使用命令创建：
+使用命令创建：
 
 ```powershell
 npm run new:article -- "本周科创情报" weekly-tech-news
