@@ -153,6 +153,15 @@ imagePosition: "50% 40%"
 
 所以通常不需要手动修改 `site` 或 `base`。如果使用自定义域名，可设置环境变量 `SITE_URL`，并按 Astro 官方文档添加 `public/CNAME`。
 
+## 发布到 Cloudflare
+
+本项目是**静态 Astro 网站**，构建产物在 `dist`。Cloudflare 的 Pages 和 Workers Builds 是两种不同的 Git 部署方式：
+
+- **现有 `new-blog` Worker：**仓库中的 `wrangler.jsonc` 指定把 `dist` 作为静态资源上传，不需要 Astro Cloudflare 适配器。Cloudflare 构建命令填 `npm run build`，部署命令填 `npx wrangler deploy`，根目录为仓库根目录。推送到连接的生产分支后，Workers Builds 会重新构建和部署。
+- **如果新建的确实是 Pages 项目：**构建命令填 `npm run build`，构建输出目录填 `dist`，根目录仍为仓库根目录。Pages 直接发布 `dist`，无需填写 `npx wrangler deploy` 这样的部署命令。
+
+若日志出现 `Executing user deploy command: npx wrangler deploy`，说明当前运行的是 Workers Builds。首次失败时，Wrangler 因找不到配置文件而自动给 Astro 加入了 Cloudflare 适配器；现在提交的 `wrangler.jsonc` 会让它直接发布静态文件，避免重复构建。
+
 ## 修改后发布的固定流程
 
 ```powershell
