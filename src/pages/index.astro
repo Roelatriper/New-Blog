@@ -44,7 +44,7 @@ const cards = [mainGuide, ...entries];
 
     <section id="articles">
       <div class="section-heading">
-        <div><div class="eyebrow">文章</div><h2>从这儿开始读。</h2><h3>有配置需求？点右上的按钮。</h3></div>
+        <div><div class="eyebrow">文章</div><h2>从这儿开始。</h2><h3>有配置需求？点右上的按钮。</h3></div>
         <div class="filters" aria-label="文章筛选">
           {(["全部", "配置指南", "基础原理", "科创情报", "个人杂谈"] as const).map((filter, index) => (
             <button class="filter-button" type="button" data-filter={filter} aria-pressed={index === 0 ? "true" : "false"}>{filter}</button>

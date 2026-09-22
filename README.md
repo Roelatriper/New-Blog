@@ -1,6 +1,6 @@
 一个使用 Astro 构建的静态个人博客。首页自动读取文章并以瀑布卡片展示；C++ 环境配置总指南包含交互式路线推荐、学习进度和完成反馈。
 
-## 第一次运行
+## 第一次运行（若你想clone）
 
 准备 Node.js 22 或 24，然后在本目录执行：
 
@@ -26,7 +26,7 @@ npm run build
 npm run preview
 
 # 创建一篇新文章草稿
-npm run new:article -- "文章标题" english-slug
+npm run new:article -- "文章标题" white-suit
 ```
 
 ## 最常改的地方
