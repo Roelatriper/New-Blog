@@ -10,7 +10,7 @@ accent: ink
 order: 10
 ---
 
-这条路线以 **x86-64 Windows** 为例，适合想使用 VS Code、又愿意花一点时间把 C++ 环境配好的同学。**完成标志很简单：在 VS Code 里点运行按钮，输入 `1 2`，看到 `3`。**
+这条路线以 **x86-64 Windows** 为例，适合想使用 VS Code、又愿意花一点时间把 C++ 环境配好的同学。**当你能运行这些，你就得到了~~Wonderful Answer~~!：在 VS Code 里点运行按钮，输入 `1 2`，看到 `3`。**
 
 VS Code 本身不带 C++ 编译器。我们用 **MSYS2** 安装 GCC，再让 VS Code 调用它。下面只安装一次；以后新建单文件题目，直接在 VS Code 里编译运行。
 
@@ -19,7 +19,7 @@ VS Code 本身不带 C++ 编译器。我们用 **MSYS2** 安装 GCC，再让 VS 
 1. 从 [VS Code 官网](https://code.visualstudio.com/)下载安装并打开。
 2. 点击左侧“四个方块”扩展图标，搜索 **C/C++**，安装发布者为 **Microsoft** 的扩展。
 
-> 此处不需要另外安装 Code Runner。后面用的是 Microsoft C/C++ 扩展提供的运行入口。
+> 这里不需要另外安装 Code Runner。后面用的是 Microsoft C/C++ 扩展提供的运行入口。
 
 ## 2. 用 MSYS2 装编译器
 
@@ -57,7 +57,7 @@ C:\msys64\ucrt64\bin
 
 ```powershell
 g++ --version
-where.exe g++
+where g++
 ```
 
 看到版本号，且 `where.exe g++` 的第一条是 `C:\msys64\ucrt64\bin\g++.exe`，再继续下一步。这里的终端只用来检查安装是否到位；编译运行会从 VS Code 的按钮完成。
@@ -96,10 +96,12 @@ int main() {
 
 ## 卡住时，按现象处理
 
-- **没看到运行按钮或 C/C++ 选项：**确认 `main.cpp` 是当前打开的文件，并确认 Microsoft 的 C/C++ 扩展已安装且启用。
+- **没看到运行按钮或 C/C++ 选项**:确认 `main.cpp` 是当前打开的文件，并确认 Microsoft 的 C/C++ 扩展已安装且启用。
 - **编译器列表没有 UCRT64 的 `g++.exe`：**先回到第 3 步，确认 `where.exe g++` 的结果；如果电脑里有多套 GCC，要选 `C:\msys64\ucrt64\bin\g++.exe`，不要凭“都是 g++”随便选。
 - **点了按钮，只在“输出”面板看到文字，无法输入 `1 2`：**确认选的是 C/C++ 的“运行 C/C++ 文件”，并切到底部的**终端**标签。不要用 Code Runner 的“输出”面板当输入窗口。
-- **代码标红但编译成功：**用命令面板执行“C/C++: 选择 IntelliSense 配置”，也选 UCRT64 的 `g++.exe`。红色波浪线和真正的编译错误不是同一回事。
-- **想用断点：**运行按钮旁可选择调试 C/C++ 文件；这篇只负责让程序跑通，不展开 Debug 配置。
+- **代码标红但编译成功**:用命令面板(ctrl+shift+p)执行“C/C++: 选择 IntelliSense 配置”，也选 UCRT64 的 `g++.exe`。红色波浪线和真正的编译错误不是同一回事。
+- **想用断点**:运行按钮旁可选择调试 C/C++ 文件；这篇只负责让程序跑通，不赘述 Debug 配置。
 
-本文的运行按钮按**当前打开的单个 `.cpp` 文件**构建。以后写多文件项目时，别在配置里直接写 `*.cpp` 来赌通配符是否展开；应明确列出源文件或使用 Make/CMake。想弄明白编辑器、编译器和这些配置文件的关系，再读[原理篇](../toolchain-basics/)；想换路线，回到[环境选择总指南](../cpp-environment/)。
+- **请更新IncludePath**:一般是前面三个文件没有写对，一般先检查 ``c_cpp_properties.json`` 的 ``includePath``、``compilerPath`` 或 ``compileCommands`` 是否写对。``tasks.json`` 和 ``launch.json`` 也要配置正确.
+
+本文的运行按钮按**当前打开的单个 `.cpp` 文件**构建。以后写多文件项目时，别在tasks.json里直接写 `*.cpp` 来赌通配符是否展开；应明确列出源文件或使用 Make/CMake。想弄明白编辑器、编译器和这些配置文件的关系，再读[原理篇](../toolchain-basics/)；想换路线，回到[环境选择总指南](../cpp-environment/)。
