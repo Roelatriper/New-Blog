@@ -1,0 +1,95 @@
+<dialog class="site-search" id="site-search" aria-labelledby="site-search-title">
+  <div class="site-search-panel">
+    <div class="site-search-heading">
+      <div><div class="eyebrow">翻翻我的笔记</div><h2 id="site-search-title">想找些什么？</h2></div>
+      <button type="button" class="site-search-close" aria-label="关闭全站搜索">×</button>
+    </div>
+    <form role="search" class="site-search-form">
+      <label class="sr-only" for="site-search-input">搜索所有文章</label>
+      <input id="site-search-input" type="search" placeholder="输入标题、分类或正文关键词…" autocomplete="off" maxlength="160" />
+      <button type="submit">搜索 ↗</button>
+    </form>
+    <div class="site-search-hints"><span>试试看</span>{["C++", "科创情报", "机器人"].map(term => <button type="button" data-site-term={term}>{term}</button>)}</div>
+    <p class="site-search-status" role="status" aria-live="polite">输入关键词，搜索全部文章。</p>
+    <div class="site-search-results"></div>
+    <div class="site-search-empty" hidden><p>这里还没写到呢。换个关键词试试？</p></div>
+    <div class="site-search-footer"><span>标题 / 简介 / 分类 / 正文</span><span><kbd>Esc</kbd> 关闭</span></div>
+  </div>
+</dialog>
+<script>
+  type Entry = { title: string; description: string; category: string; url: string; text: string };
+  const dialog = document.querySelector<HTMLDialogElement>("#site-search")!;
+  const input = dialog.querySelector<HTMLInputElement>("input")!;
+  const results = dialog.querySelector<HTMLElement>(".site-search-results")!;
+  const status = dialog.querySelector<HTMLElement>(".site-search-status")!;
+  const empty = dialog.querySelector<HTMLElement>(".site-search-empty")!;
+  let entries: Entry[] | undefined;
+  let pending: Promise<void> | undefined;
+  let opener: HTMLElement | null = null;
+  let previousOverflow = "";
+  const normalize = (value: string) => value.normalize("NFKC").toLocaleLowerCase("zh-CN");
+  const render = () => {
+    results.replaceChildren(); empty.hidden = true;
+    if (!entries) return;
+    const query = input.value.trim();
+    const terms = normalize(query).split(/\s+/).filter(Boolean);
+    if (!terms.length) { status.textContent = `共 ${entries.length} 篇文章，输入关键词开始搜索。`; return; }
+    const matches = entries.map(entry => {
+      const fields = [entry.title, entry.description, entry.category, entry.text].map(normalize);
+      return { entry, score: terms.every(term => fields.some(field => field.includes(term)))
+        ? terms.reduce((sum, term) => sum + (fields[0].includes(term) ? 10 : fields[1].includes(term) ? 5 : fields[2].includes(term) ? 3 : 1), 0) : 0 };
+    }).filter(item => item.score).sort((a, b) => b.score - a.score);
+    status.textContent = matches.length ? `找到 ${matches.length} 篇相关文章` : "没有找到相关文章";
+    empty.hidden = matches.length > 0;
+    matches.forEach(({ entry }) => {
+      const link = document.createElement("a"); link.className = "site-search-result"; link.href = entry.url;
+      const category = document.createElement("span"); category.className = "search-category"; category.textContent = entry.category;
+      const title = document.createElement("strong"); title.textContent = entry.title;
+      const excerpt = document.createElement("p");
+      const position = Math.max(0, ...terms.map(term => normalize(entry.text).indexOf(term)));
+      const start = Math.max(0, position - 32);
+      excerpt.textContent = (start ? "…" : "") + entry.text.slice(start, start + 150) + (entry.text.length > start + 150 ? "…" : "");
+      link.append(category, title, excerpt); results.append(link);
+    });
+  };
+  const load = async () => {
+    if (entries) { render(); return; }
+    if (pending) return pending;
+    status.textContent = "正在翻开笔记…";
+    pending = (async () => {
+      try {
+        const response = await fetch(`${document.documentElement.dataset.base}search-index.json`);
+        if (!response.ok) throw new Error("Search index unavailable");
+        entries = await response.json(); render();
+      } catch { status.textContent = "搜索暂时没加载成功，点击“搜索”重试。"; }
+      finally { pending = undefined; }
+    })();
+    return pending;
+  };
+  const open = () => {
+    if (dialog.open) return;
+    opener = document.activeElement as HTMLElement;
+    if (opener?.matches("[data-site-search-open]")) opener = document.querySelector<HTMLElement>(".visit-trigger");
+    previousOverflow = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
+    dialog.showModal(); input.focus(); void load();
+  };
+  document.querySelectorAll("[data-site-search-open]").forEach(button => button.addEventListener("click", open));
+  dialog.querySelector(".site-search-close")!.addEventListener("click", () => dialog.close());
+  dialog.addEventListener("close", () => { document.documentElement.style.overflow = previousOverflow; opener?.focus(); });
+  dialog.addEventListener("click", event => { if (event.target === dialog) dialog.close(); });
+  dialog.querySelector("form")!.addEventListener("submit", event => { event.preventDefault(); void load(); });
+  input.addEventListener("input", render);
+  input.addEventListener("keydown", event => {
+    if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); dialog.close(); }
+  });
+  dialog.querySelectorAll<HTMLButtonElement>("[data-site-term]").forEach(button => button.addEventListener("click", () => {
+    input.value = button.dataset.siteTerm!; void load(); input.focus();
+  }));
+  document.addEventListener("keydown", event => {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+      if (document.querySelector("dialog[open]") && !dialog.open) return;
+      event.preventDefault(); open();
+    }
+  });
+</script>

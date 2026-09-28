@@ -1,4 +1,6 @@
 ---
+import SiteSearch from "./SiteSearch.astro";
+import "../styles/navigation.css";
 const base = import.meta.env.BASE_URL;
 ---
 
@@ -12,11 +14,38 @@ const base = import.meta.env.BASE_URL;
       </span>
     </a>
     <nav class="site-nav" aria-label="主导航">
-      <a href={base}>首页</a>
-      <a href={`${base}#articles`}>文章</a>
-      <a href={`${base}articles/me/`}>关于</a>
       <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换明暗主题" title="切换明暗主题">◐</button>
-      <a class="nav-cta" href={`${base}articles/cpp-environment/`}>C++ 配置指南</a>
+      <div class="visit-nav">
+        <button class="visit-trigger" type="button" aria-expanded="false" aria-controls="visit-links">让我访问！ <span aria-hidden="true">⌄</span></button>
+        <div class="visit-links" id="visit-links" hidden>
+          <a href={`${base}#articles`}><span>文章</span><span aria-hidden="true">↗</span></a>
+          <a href={`${base}articles/me/`}><span>关于</span><span aria-hidden="true">↗</span></a>
+          <button type="button" data-site-search-open aria-haspopup="dialog"><span>搜索</span><kbd>⌘ / Ctrl K</kbd></button>
+        </div>
+      </div>
     </nav>
   </div>
 </header>
+<SiteSearch />
+<script>
+  const trigger = document.querySelector<HTMLButtonElement>(".visit-trigger")!;
+  const links = document.querySelector<HTMLElement>(".visit-links")!;
+  const nav = document.querySelector<HTMLElement>(".visit-nav")!;
+  const close = () => { links.hidden = true; trigger.setAttribute("aria-expanded", "false"); };
+  trigger.addEventListener("click", () => {
+    links.hidden = !links.hidden;
+    trigger.setAttribute("aria-expanded", String(!links.hidden));
+  });
+  trigger.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowDown") {
+      event.preventDefault(); links.hidden = false; trigger.setAttribute("aria-expanded", "true");
+      links.querySelector<HTMLElement>("a")?.focus();
+    }
+  });
+  links.addEventListener("click", (event) => { if ((event.target as Element).closest("a, button")) close(); });
+  document.addEventListener("click", (event) => { if (!nav.contains(event.target as Node)) close(); });
+  nav.addEventListener("focusout", (event) => { if (!nav.contains(event.relatedTarget as Node)) close(); });
+  nav.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") { close(); trigger.focus(); }
+  });
+</script>
