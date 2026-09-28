@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
+import ArticleSearch from "../components/ArticleSearch.astro";
 
 interface Heading { depth: number; slug: string; text: string; }
 interface Props {
@@ -31,6 +32,7 @@ const formatDate = (date: Date) => new Intl.DateTimeFormat("zh-CN", { dateStyle:
   </header>
   <div class="article-shell">
     <nav class="toc" aria-label="文章目录">
+      {category === "科创情报" && <ArticleSearch />}
       <span class="toc-title">本文目录</span>
       {toc.map((heading) => <a href={`#${heading.slug}`} class={heading.depth === 3 ? "toc-sub" : undefined}>{heading.text}</a>)}
     </nav>

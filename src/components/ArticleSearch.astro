@@ -1,0 +1,235 @@
+<button
+  class="article-search-trigger"
+  type="button"
+  data-article-search-open
+  aria-haspopup="dialog"
+>
+  <span aria-hidden="true">⌕</span>
+  搜索本期情报
+</button>
+
+<dialog class="article-search-dialog" data-article-search aria-labelledby="article-search-title">
+  <div class="article-search-panel">
+    <div class="article-search-heading">
+      <div>
+        <div class="eyebrow">页内搜索</div>
+        <h2 id="article-search-title">找赛事、正文或关键词</h2>
+      </div>
+      <button class="article-search-close" type="button" data-article-search-close aria-label="关闭搜索">×</button>
+    </div>
+
+    <form class="article-search-form" role="search" data-article-search-form>
+      <label class="sr-only" for="article-search-input">搜索本期科创情报</label>
+      <input
+        id="article-search-input"
+        type="search"
+        inputmode="search"
+        autocomplete="off"
+        placeholder="例如：ICPC、机器人、网络安全、华为"
+        data-article-search-input
+      />
+      <button type="submit">搜索</button>
+    </form>
+
+    <div class="article-search-suggestions" aria-label="常用关键词">
+      <span>试试：</span>
+      {['ICPC', '蓝桥杯', '机器人', '网络安全', '华为'].map((keyword) => (
+        <button type="button" data-search-suggestion={keyword}>{keyword}</button>
+      ))}
+    </div>
+
+    <p class="article-search-status" role="status" aria-live="polite" data-article-search-status>
+      输入关键词，会显示命中的栏目和正文片段。
+    </p>
+    <div class="article-search-results" data-article-search-results></div>
+  </div>
+</dialog>
+
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", () => {
+    const dialog = document.querySelector("[data-article-search]");
+    const openButton = document.querySelector("[data-article-search-open]");
+    const closeButton = document.querySelector("[data-article-search-close]");
+    const form = document.querySelector("[data-article-search-form]");
+    const input = document.querySelector("[data-article-search-input]");
+    const status = document.querySelector("[data-article-search-status]");
+    const results = document.querySelector("[data-article-search-results]");
+    const article = document.querySelector(".article-content");
+
+    if (!(dialog instanceof HTMLDialogElement) || !(input instanceof HTMLInputElement) || !article || !results || !status) return;
+
+    const normalize = (value) => value
+      .normalize("NFKC")
+      .toLocaleLowerCase("zh-CN")
+      .replace(/[\s·•，。；：、/（）()《》“”'"—_-]+/g, "");
+
+    const slugify = (value) => normalize(value)
+      .replace(/[^\p{Letter}\p{Number}]+/gu, "-")
+      .replace(/^-|-$/g, "")
+      .slice(0, 54);
+
+    const aliases = new Map([
+      ["acm", "icpc"],
+      ["互联网+", "中国国际大学生创新大赛"],
+      ["国创赛", "中国国际大学生创新大赛"],
+      ["电赛", "全国大学生电子设计竞赛"],
+      ["数模", "全国大学生数学建模竞赛"],
+      ["c4", "中国高校计算机大赛"],
+      ["信安赛", "全国大学生信息安全竞赛"],
+      ["华为", "华为ict"],
+    ]);
+
+    const competitionTables = [...article.querySelectorAll("table")].filter((table) => {
+      const firstHeader = table.querySelector("th")?.textContent?.trim();
+      return firstHeader === "赛事";
+    });
+
+    competitionTables.forEach((table) => {
+      table.classList.add("competition-table");
+      const labels = [...table.querySelectorAll("thead th")].map((cell) => cell.textContent?.trim() || "");
+      table.querySelectorAll("tbody tr").forEach((row, rowIndex) => {
+        const title = row.querySelector("td")?.textContent?.trim() || `赛事 ${rowIndex + 1}`;
+        row.id ||= `competition-${slugify(title) || rowIndex + 1}`;
+        row.dataset.searchSection = "competition";
+        row.dataset.searchTitle = title;
+        row.querySelectorAll("td").forEach((cell, index) => {
+          cell.dataset.label = labels[index] || "详情";
+        });
+      });
+    });
+
+    const pathFor = (element) => {
+      const path = [];
+      const ownDepth = /^H[1-3]$/.test(element.tagName) ? Number(element.tagName.slice(1)) : 3;
+      const wantedDepths = ownDepth === 1 ? [] : ownDepth === 2 ? [1] : [2, 1];
+      let cursor = element.previousElementSibling;
+      while (cursor && wantedDepths.length) {
+        if (/^H[1-2]$/.test(cursor.tagName)) {
+          const depth = Number(cursor.tagName.slice(1));
+          const wantedIndex = wantedDepths.indexOf(depth);
+          if (wantedIndex >= 0) {
+            path.unshift(cursor.textContent?.trim() || "");
+            wantedDepths.splice(wantedIndex, 1);
+          }
+        }
+        cursor = cursor.previousElementSibling;
+      }
+      return path.filter(Boolean).join(" / ");
+    };
+
+    const excerptFor = (text, query) => {
+      const compact = text.replace(/\s+/g, " ").trim();
+      const position = compact.toLocaleLowerCase("zh-CN").indexOf(query.toLocaleLowerCase("zh-CN"));
+      if (position < 0) return compact.slice(0, 92) + (compact.length > 92 ? "…" : "");
+      const start = Math.max(0, position - 30);
+      const end = Math.min(compact.length, position + query.length + 62);
+      return `${start > 0 ? "…" : ""}${compact.slice(start, end)}${end < compact.length ? "…" : ""}`;
+    };
+
+    const explicitSections = [...article.querySelectorAll("[data-search-section]")].map((element) => ({
+      target: element,
+      title: element.dataset.searchTitle || element.querySelector("h2, h3, td")?.textContent?.trim() || "正文栏目",
+      path: pathFor(element.closest("table") || element),
+      text: element.textContent?.replace(/\s+/g, " ").trim() || "",
+      keywords: element.dataset.searchKeywords || "",
+    }));
+
+    const headingSections = [...article.querySelectorAll("h1, h2, h3")].map((heading) => {
+      const pieces = [];
+      let cursor = heading.nextElementSibling;
+      while (cursor) {
+        if (/^H[1-3]$/.test(cursor.tagName)) break;
+        if (!cursor.matches("table:has([data-search-section]), [data-search-section]")) {
+          pieces.push(cursor.textContent || "");
+        }
+        cursor = cursor.nextElementSibling;
+      }
+      return {
+        target: heading,
+        title: heading.textContent?.trim() || "正文栏目",
+        path: pathFor(heading),
+        text: `${heading.textContent || ""} ${pieces.join(" ")}`.replace(/\s+/g, " ").trim(),
+        keywords: heading.dataset.searchKeywords || "",
+      };
+    });
+
+    const searchIndex = [...explicitSections, ...headingSections].map((entry) => ({
+      ...entry,
+      searchable: normalize(`${entry.title} ${entry.path} ${entry.text} ${entry.keywords}`),
+    }));
+
+    const renderResults = () => {
+      const rawQuery = input.value.trim();
+      results.replaceChildren();
+      if (!rawQuery) {
+        status.textContent = "输入关键词，会显示命中的栏目和正文片段。";
+        return;
+      }
+
+      const alias = aliases.get(rawQuery.toLocaleLowerCase("zh-CN"));
+      const terms = [rawQuery, alias].filter(Boolean).map(normalize);
+      const matches = searchIndex
+        .filter((entry) => terms.some((term) => entry.searchable.includes(term)))
+        .sort((a, b) => {
+          const query = normalize(rawQuery);
+          const score = (entry) => normalize(entry.title).includes(query) ? 0 : normalize(entry.path).includes(query) ? 1 : 2;
+          return score(a) - score(b);
+        })
+        .slice(0, 12);
+
+      status.textContent = matches.length
+        ? `找到 ${matches.length} 个相关栏目${alias ? `（已联想“${alias}”）` : ""}`
+        : "没有找到相关栏目，试试赛事简称、技术方向或主办方。";
+
+      matches.forEach((entry) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "article-search-result";
+
+        const crumb = document.createElement("span");
+        crumb.className = "article-search-result-path";
+        crumb.textContent = entry.path || "本期情报";
+
+        const title = document.createElement("strong");
+        title.textContent = entry.title;
+
+        const excerpt = document.createElement("span");
+        excerpt.className = "article-search-result-excerpt";
+        excerpt.textContent = excerptFor(entry.text, rawQuery);
+
+        button.append(crumb, title, excerpt);
+        button.addEventListener("click", () => {
+          dialog.close();
+          entry.target.scrollIntoView({ behavior: "smooth", block: "center" });
+          entry.target.classList.remove("search-target-flash");
+          requestAnimationFrame(() => entry.target.classList.add("search-target-flash"));
+          setTimeout(() => entry.target.classList.remove("search-target-flash"), 1800);
+        });
+        results.append(button);
+      });
+    };
+
+    const openSearch = () => {
+      dialog.showModal();
+      requestAnimationFrame(() => input.focus());
+    };
+
+    openButton?.addEventListener("click", openSearch);
+    closeButton?.addEventListener("click", () => dialog.close());
+    form?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      renderResults();
+    });
+    input.addEventListener("input", renderResults);
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+    document.querySelectorAll("[data-search-suggestion]").forEach((button) => {
+      button.addEventListener("click", () => {
+        input.value = button.dataset.searchSuggestion || "";
+        renderResults();
+        input.focus();
+      });
+    });
+  });
+</script>
