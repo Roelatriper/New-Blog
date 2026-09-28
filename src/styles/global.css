@@ -66,6 +66,7 @@ img { max-width: 100%; }
 .brand { display: inline-flex; align-items: center; gap: 0.7rem; font-weight: 850; }
 .brand-mark { width: 2.35rem; height: 2.35rem; display: grid; place-items: center; border-radius: 0.8rem 0.8rem 1.15rem 1.15rem; color: var(--miku-ink); background: var(--miku); font-weight: 900; box-shadow: inset 0 -0.5rem 1rem rgba(0,0,0,.08); }
 .brand-mark img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+.brand .hero-face { display: grid; width: max-content; max-width: 100%; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
 .site-nav { display: flex; align-items: center; gap: 0.3rem; }
 .site-nav a, .theme-toggle { padding: 0.62rem 0.82rem; border: 0; border-radius: 999px; color: var(--muted); background: transparent; cursor: pointer; }
 .site-nav a:hover, .theme-toggle:hover { color: var(--ink); background: var(--surface); }
@@ -75,11 +76,10 @@ img { max-width: 100%; }
 .home-hero { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 1.6rem; align-items: stretch; margin-bottom: clamp(4rem, 8vw, 7rem); }
 .hero-copy { padding-block: clamp(1.2rem, 4vw, 3.8rem); }
 .hero-copy h1 { margin: 1rem 0 1.35rem; max-width: 13ch; font-size: clamp(3.3rem, 7vw, 6rem); line-height: 1.04; letter-spacing: 0.025em; }
-.hero-copy .hero-face { display: grid; width: max-content; max-width: 100%; }
 .hero-face span { grid-area: 1 / 1; white-space: nowrap; transition: opacity .24s ease, transform .24s ease; }
 .hero-face .face-hover { color: var(--miku-deep); opacity: 0; transform: translateY(.12em) scale(.94); }
-.hero-face:hover .face-default, .hero-face:focus-visible .face-default { opacity: 0; transform: translateY(-.12em) scale(.94); }
-.hero-face:hover .face-hover, .hero-face:focus-visible .face-hover { opacity: 1; transform: translateY(0) scale(1); }
+.brand:hover .hero-face .face-default, .brand:focus-visible .hero-face .face-default { opacity: 0; transform: translateY(-.12em) scale(.94); }
+.brand:hover .hero-face .face-hover, .brand:focus-visible .hero-face .face-hover { opacity: 1; transform: translateY(0) scale(1); }
 .hero-copy .lede { max-width: 39rem; }
 .promise-card { min-height: 21rem; padding: clamp(1.8rem, 4vw, 2.6rem); border-radius: var(--radius-xl); color: white; background: #15312f; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; position: relative; box-shadow: var(--shadow); }
 .promise-card::after { content: "♪"; position: absolute; right: -1rem; bottom: -5.4rem; color: rgba(57,197,187,.2); font-size: 15rem; transform: rotate(-9deg); }
