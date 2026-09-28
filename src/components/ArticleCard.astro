@@ -29,18 +29,23 @@ const {
   imagePosition = "center"
 } = Astro.props;
 const href = `${import.meta.env.BASE_URL}articles/${id}/`;
-const imageUrl = image
+const imageUrl = id === "me" ? `${import.meta.env.BASE_URL}images/miku/about.webp` : image
   ? (/^(https?:|data:)/.test(image) ? image : `${import.meta.env.BASE_URL}${image.replace(/^\/+/, "")}`)
   : undefined;
-const imageStyle = `--card-blur:${imageBlur}px;--card-brightness:${imageBrightness};--card-position:${imagePosition};`;
+const imageStyle = id === "me" ? "--card-blur:0px;--card-brightness:1;--card-position:center;" : `--card-blur:${imageBlur}px;--card-brightness:${imageBrightness};--card-position:${imagePosition};`;
+const glyph = category === "配置指南" ? "</>" : category === "基础原理" ? "{ }" : category === "科创情报" ? "✳" : "♪";
+const coverSeed = [...id].reduce((total, character) => total + (character.codePointAt(0) ?? 0), 0);
+const coverVariant = `cover-variant-${coverSeed % 6 + 1}`;
 ---
 
-<article class:list={["article-card", { featured }]} data-category={category}>
+<article class:list={["article-card", { featured, "about-card": id === "me" }]} data-category={category}>
   <a href={href}>
-    <div class:list={["card-art", `accent-${accent}`, { "has-image": imageUrl }]} style={imageUrl ? imageStyle : undefined}>
+    <div class:list={["card-art", `accent-${accent}`, { "has-image": imageUrl, [coverVariant]: !imageUrl }]} style={imageUrl ? imageStyle : undefined}>
       {imageUrl && <img class="card-image" src={imageUrl} alt={imageAlt} loading="lazy" decoding="async" />}
       {imageUrl && <span class="card-image-mask" aria-hidden="true"></span>}
-      <strong>{title}</strong>
+      <span class="cover-label">{category}</span>
+      {!imageUrl && <span class="cover-glyph" aria-hidden="true">{glyph}</span>}
+      <span class="cover-tag" aria-hidden="true">{featured ? "精选笔记 / PINNED" : "白衣的笔记 / NOTES"}</span>
     </div>
     <div class="card-body">
       <div class="card-meta"><span>{featured ? "置顶 · " : ""}{category}</span></div>

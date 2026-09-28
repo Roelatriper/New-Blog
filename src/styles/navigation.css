@@ -13,10 +13,11 @@
 .site-search-panel { max-width: 48rem; margin: auto; }
 .site-search-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .site-search-heading h2 { margin: .4rem 0 1.5rem; font-size: clamp(2rem, 5vw, 3.2rem); }
-.site-search-close { border: 1px solid var(--line); border-radius: 50%; width: 2.8rem; height: 2.8rem; background: var(--surface); font-size: 1.6rem; cursor: pointer; }
+.site-search-close { display: grid; flex: 0 0 auto; place-items: center; width: 2.8rem; height: 2.8rem; padding: 0; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); font-size: 1.6rem; line-height: 1; cursor: pointer; }
 .site-search-form { display: flex; padding: .5rem; gap: .5rem; border: 1px solid var(--line); border-radius: 1.1rem; background: var(--surface); }
 .site-search-form:focus-within { border-color: var(--miku); box-shadow: 0 0 0 3px var(--miku-soft); }
 .site-search-form input { width: 100%; min-width: 0; padding: .7rem; border: 0; color: var(--ink); background: transparent; }
+.site-search-form input:focus-visible { outline: none; }
 .site-search-form button { flex-shrink: 0; border: 0; border-radius: .7rem; padding: .6rem 1rem; color: var(--miku-ink); background: var(--miku); font-weight: 750; cursor: pointer; }
 .site-search-hints { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin: 1rem 0 2rem; color: var(--muted); font-size: .85rem; }
 .site-search-hints button { border: 1px solid var(--line); padding: .3rem .7rem; border-radius: 999px; background: var(--surface); cursor: pointer; }

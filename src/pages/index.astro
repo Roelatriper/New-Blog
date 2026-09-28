@@ -22,26 +22,30 @@ const mainGuide = {
   }
 };
 const cards = [mainGuide, ...entries];
+const base = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout>
   <main class="home-main shell">
     <section class="home-hero" id="about">
       <div class="hero-copy">
+        <div class="hero-kicker"><span class="status-dot" aria-hidden="true"></span> 科创 · 代码 · 生活 <span class="hero-frequency" aria-hidden="true">39 / 01</span></div>
         <h1 id="hitokoto">已经很努力的加载了！...</h1>
         <script src="https://v1.hitokoto.cn/?encode=js&select=%23hitokoto" defer></script>
         <p class="lede">这儿收录我整理的科创情报、工具配置和杂。挑感兴趣的读。</p>
+        <div class="hero-actions"><a class="primary-button" href="#articles">翻开笔记 <span aria-hidden="true">↘</span></a><a class="hero-about" href={`${base}articles/me/`}>认识一下我 ↗</a></div>
+        <div class="hero-index"><span>{String(cards.length).padStart(2, "0")} 篇笔记</span><span>一点灵感，一点折腾。</span></div>
       </div>
-      <aside class="promise-card">
-        <div class="eyebrow">本站正在生长ing</div>
-        <strong>Divide<br />et impera.</strong>
-        <p>分而治之。</p>
+      <aside class="miku-art-card" aria-label="风中的 Miku 插画">
+        <div class="art-caption-top"><span>MIKU / 01</span><span>风往这边吹 ↗</span></div>
+        <img src={`${base}images/miku/wind.webp`} width="850" height="850" alt="青绿色双马尾被风吹起的 Q 版 Miku" fetchpriority="high" />
+        <div class="art-caption-bottom"><div><span class="eyebrow">本站正在生长ing</span><strong>Divide et impera.</strong></div><span class="art-note">分而治之。<br /><span aria-hidden="true">♪ ━━━ 39</span></span></div>
       </aside>
     </section>
 
     <section id="articles">
       <div class="section-heading">
-        <div><div class="eyebrow">文章</div><h2>从这儿开始。</h2><p><a class="guide-link" href={`${import.meta.env.BASE_URL}articles/cpp-environment/`}>有配置需求？从 C++ 环境选择指南开始 ↗</a></p></div>
+        <div><div class="eyebrow">笔记索引 / {String(cards.length).padStart(2, "0")}</div><h2>从这儿开始<span class="miku-period">。</span></h2><p><a class="guide-link" href={`${base}articles/cpp-environment/`}>有配置需求？从 C++ 环境选择指南开始 ↗</a></p></div>
         <div class="filters" aria-label="文章筛选">
           {(["全部", "配置指南", "基础原理", "科创情报", "个人杂谈"] as const).map((filter, index) => (
             <button class="filter-button" type="button" data-filter={filter} aria-pressed={index === 0 ? "true" : "false"}>{filter}</button>

@@ -12,7 +12,7 @@
     <div class="site-search-hints"><span>试试看</span>{["C++", "科创情报", "机器人"].map(term => <button type="button" data-site-term={term}>{term}</button>)}</div>
     <p class="site-search-status" role="status" aria-live="polite">输入关键词，搜索全部文章。</p>
     <div class="site-search-results"></div>
-    <div class="site-search-empty" hidden><p>这里还没写到呢。换个关键词试试？</p></div>
+    <div class="site-search-empty" hidden><img src={`${import.meta.env.BASE_URL}images/miku/quiet.webp`} width="144" height="144" alt="呆呆等待的 Miku" loading="lazy" /><p>这里还没写到呢。换个关键词试试？</p></div>
     <div class="site-search-footer"><span>标题 / 简介 / 分类 / 正文</span><span><kbd>Esc</kbd> 关闭</span></div>
   </div>
 </dialog>

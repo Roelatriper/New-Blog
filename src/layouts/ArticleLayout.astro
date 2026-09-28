@@ -21,6 +21,7 @@ const formatDate = (date: Date) => new Intl.DateTimeFormat("zh-CN", { dateStyle:
 <BaseLayout title={`${title} · 白衣`} description={description}>
   <div class="reading-progress" id="readingProgress" aria-hidden="true"></div>
   <header class="article-header">
+    <a class="reading-back" href={`${import.meta.env.BASE_URL}#articles`}>← 回到笔记索引</a>
     <div class="eyebrow">{category}</div>
     <h1>{title}</h1>
     <p class="lede">{description}</p>
@@ -36,7 +37,9 @@ const formatDate = (date: Date) => new Intl.DateTimeFormat("zh-CN", { dateStyle:
       <span class="toc-title">本文目录</span>
       {toc.map((heading) => <a href={`#${heading.slug}`} class={heading.depth === 3 ? "toc-sub" : undefined}>{heading.text}</a>)}
     </nav>
-    <article class="article-content"><slot /></article>
+    <article class="article-content">
+      <slot />
+    </article>
   </div>
   <section class="comments shell" aria-label="文章评论">
     <h2>吱一声吧。</h2>
