@@ -140,7 +140,10 @@ img { max-width: 100%; }
 .article-content code { padding: 0.14rem 0.36rem; border-radius: 0.4rem; color: var(--ink); background: var(--surface-2); font: 0.92em ui-monospace, SFMono-Regular, Consolas, monospace; }
 .article-content pre { margin: 1.5rem 0; padding: 1.35rem; overflow: auto; border-radius: 1.2rem; color: #eaf7f5; background: #112321; }
 .article-content pre code { padding: 0; color: inherit; background: none; }
-.article-content table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.95rem; }
+.article-content .katex-display { max-width: 100%; overflow-x: auto; overflow-y: hidden; padding-block: 0.25rem; }
+.article-content .katex-display > .katex { white-space: nowrap; }
+.article-content table { display: block; width: 100%; overflow-x: auto; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.95rem; }
+.article-content th:first-child, .article-content td:first-child { min-width: 5em; }
 .article-content th, .article-content td { padding: 0.8rem; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
 .article-content th { color: var(--ink); }
 .article-panel { margin-bottom: 1.4rem; padding: clamp(1.5rem, 4vw, 3rem); border: 1px solid var(--line); border-radius: var(--radius-xl); background: var(--surface); box-shadow: 0 0.7rem 2.2rem rgba(24,65,61,.06); scroll-margin-top: 6rem; }
