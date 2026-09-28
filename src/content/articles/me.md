@@ -16,9 +16,7 @@ draft: false
 order: 100
 ---
 
-![被 Miku 玩偶、海报和电脑环绕的创作房间](../../assets/miku-room.png)
-
-*代码之外，也给喜欢的事物留一点位置。*
+![mikus](../../assets/miku-room.png)
 
 ## Hello,World!
 
