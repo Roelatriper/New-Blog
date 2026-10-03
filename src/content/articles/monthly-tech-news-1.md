@@ -13,7 +13,7 @@ imageBlur: 10
 imageBrightness: 0.62
 imagePosition: "center"
 draft: false
-order: 100
+order: 2
 ---
 
 # 本校讯息
